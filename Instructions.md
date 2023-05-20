@@ -67,14 +67,14 @@ Examine the results.
 
 ### Exercise 1
 1.	How many gene sequences are there in this genome genome, and how many gene sequences are their in this plasmid?
-A: 6522
-B: 5779
-C: 2914
+- A: 6522
+- B: 5779
+- C: 2914
 
 2.	What is the taxonomic identity of each of your isolates based on their 16S rRNA gene sequence? How similar is it to known reference strains?
-Pseudomonas aeruginosa HS18-89
-Klebsiella pneumoniae HS11286
-Staphylococcus aureus Gv51
+- A: Pseudomonas aeruginosa HS18-89
+- B: Klebsiella pneumoniae HS11286
+- C: Staphylococcus aureus Gv51
 
 Now we know what species these isolates are, we want to search their genes to determine if any of them are ARGs. For this we use DIAMOND, a sequence alignment tool which works similarly to BLAST but runs faster when searching a lot of sequences.
 
@@ -158,7 +158,6 @@ Use less to view the results for each plasmid.
 1.	What ARGs are present on the plasmids, and what’s the taxonomy associated with the reference sequence that they most closely match?
 2.	Why are there inconsistencies between the taxonomy of the isolate and the ARGs found on the plasmids?
 3.	If you had metagenomic data in addition to these isolates, how would you make use of both datasets? What further analyses could be done to assist your collaborator in understanding where the antimicrobial resistance is coming from, and how they may recommend the farmer to approach treatment for the animals?
- 
  
 # Misc
 [where to look for plasmids and genomes](https://www.ncbi.nlm.nih.gov/genome/browse#!/prokaryotes/Pseudomonas%20aeruginosa)
