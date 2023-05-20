@@ -102,10 +102,12 @@ This command begins by running a loop on all three isolate files: for each one (
 
 What it does for each file is define the “name” variable, which is simply the sample name. The basename command strips any directory names that might come before the filename, then sed removes the .faa extension. This leaves us with the isolate name in the $name variable, which we use to name the output files.
 Then, the diamond blastp command takes our new CARD.dmnd database and our isolate proteins, and searches those proteins in the database. The --out flag allows us to name the output file (which uses the isolate name, coming from the $name variable we defined above). We add a few additional options to the end to control our output:
-•	--outfmt 6: DIAMOND has several options for its output, this is a tabular format 
-•	--max-target-seqs 1: DIAMOND will output only one best hit when a protein matches something in the database
-•	--max-hsps-1: DIAMOND will output only one best ‘high scoring pair’ per alignment. This prevents matches appearing twice if the query protein happens to align equally well in more than one place on the same database protein.
-•	--id 50: This controls the minimum percentage identity between the query and database proteins. For proteins, 50% is considered a generous match to allow ARGs less similar to the reference sequences to be picked up.
+
+- --outfmt 6: DIAMOND has several options for its output, this is a tabular format 
+- --max-target-seqs 1: DIAMOND will output only one best hit when a protein matches something in the database
+- --max-hsps-1: DIAMOND will output only one best ‘high scoring pair’ per alignment. This prevents matches appearing twice if the query protein happens to align equally well in more than one place on the same database protein.
+- --id 50: This controls the minimum percentage identity between the query and database proteins. For proteins, 50% is considered a generous match to allow ARGs less similar to the reference sequences to be picked up.
+
 The loop is closed with done, and you should have one DIAMOND results file for each isolate, named appropriately.
 Have a look at each of these files with `cat A_genome_CARD_results.txt`
 
@@ -120,7 +122,7 @@ Have a look at each of these files with `cat A_genome_CARD_results.txt`
 <model answer>
  
 ## Part 2: Identifying plasmid-borne ARGs and making recommendations
-During your analysis you notice something strange – even though the [species name] isolate came from antibiotic selection, it doesn’t seem to contain any ARGs. What’s going on? Let’s do some forensic bioinformatics.
+During your analysis you notice something strange – even though the **species name - maybe C?** isolate came from antibiotic selection, it doesn’t seem to contain any ARGs. What’s going on? Let’s do some forensic bioinformatics.
 
 First, let’s rule out a simple mistake – perhaps your collaborator got the files mixed up and they’ve given you the protein sequences from the wrong organism. Let’s check some of the proteins from the isolate to confirm that it is what we think it is.
 
