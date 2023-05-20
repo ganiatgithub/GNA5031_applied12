@@ -13,7 +13,6 @@ At the conclusion of this session, students should be able to:
 
 Software required: `DIAMOND`, `seqkit`, text editing software (`BBedit` for Mac, `Notepad++` for PC), `Microsoft excel`
  
- 
 ## Introduction
 
 The antibiotic resistome refers to the collection of all antimicrobial resistance genes (ARGs) in both pathogenic and non-pathogenic bacteria. To understand the resistome of a particular environment or setting, metagenomic sequencing can be used to examine the genomes of all microbial community members and profile the ARGs they contain. However, depending on the depth of sequencing and the success of metagenome assembly efforts, with this approach it may be challenging to link ARGs with the organisms that have them, to verify whether the presence of such genes corresponds to an antibiotic resistance phenotype, and to understand transmission dynamics. 
@@ -21,17 +20,13 @@ The antibiotic resistome refers to the collection of all antimicrobial resistanc
 In this case scenario, a collaborator has been studying antimicrobial resistant bacteria in agricultural runoff from a dairy farm. Recent infections in the cows have not resolved despite the farmer’s use of antibiotics, and there is concern that the farm’s runoff may be a hotspot for antimicrobial resistance that may be entering nearby waterways.
 Using a range of antibiotic selection agar plates to culture bacteria from the runoff, your collaborator has isolated a number of bacterial strains that grow in the presence of antibiotics. Three of these isolates exhibited high levels of resistance and your collaborator wishes to investigate them further. They have done some initial analyses and provided you with three files for each isolate:
 
-1.	They initially conducted 16S rRNA sequencing of each isolate they found, to taxonomically identify them. They have provided you with the 16S rRNA sequence for each of the three concerning isolates in nucleotide format. `organismx_16S.fna`
-2.	They have sequenced the genomes of these isolates and have provided you with the set of predicted protein sequences from each genome. `organismx_genomic.faa`
-3.	To examine plasmid-borne resistance, they have isolated and purified plasmids from these isolates, and provided their sequences in nucleotide format. `organismx_plasmid.fna`
+1.	They initially conducted 16S rRNA sequencing of each isolate they found, to taxonomically identify them. They have provided you with the 16S rRNA sequence for each of the three concerning isolates in nucleotide format. `_16S.fna`
+2.	They have sequenced the genomes of these isolates and have provided you with the set of predicted protein sequences from each genome. `_genome.fna`
+3.	To examine plasmid-borne resistance, they have isolated and purified plasmids from these isolates, and provided their sequences in nucleotide format. `_plasmid.fna`
 
 In this workshop you will analyse this data to identify the ARGs in these isolates that are likely to confer their resistance phenotypes, and consider the implications of this resistance, so that you may provide direction to your collaborator.
 
 ## Part 1: Identify the isolates and search their genomes for ARGs
-Let’s start by checking the files you have been given. Use head <file>, less <file> and seqkit stats <file>, replacing <file> with the filename, to understand their contents.
-It would be helpful to know which organisms we’re dealing with, so let’s check those 16S rRNA sequences to identify what these organisms are.
-Head to NCBI BLAST and select BLASTn. Copy the sequence into the query box, and change the search to BLAST against rRNA/ITS databases – specifically 16S ribosomal RNA sequences. You can leave the rest of the options at the default settings, and run the search.
-Examine the results. 
 
 ### Login to virtual machine
 [Instructions in detail](https://docs.google.com/document/d/1WBYDpS5utSvHylmRrgBNzXmZwQ74kTkv/edit)
@@ -55,28 +50,43 @@ seqkit -v # test if seqkit has been instaled
 
 git clone https://github.com/ganiatgithub/GNA5031_applied12.git # obtain all information needed for this session.
 ```
+### Inpect data
+Let’s start by checking the files you have been given. Use the following scripts and understand their contents.
+
+```
+cd data
+head genome.fna
+less genome.fna
+seqkit stats genome.fna
+```
+
+It would be helpful to know which organisms we’re dealing with, so let’s check those 16S rRNA sequences to identify what these organisms are.
+Head to NCBI BLAST and select BLASTn. Copy the sequence into the query box, and change the search to BLAST against rRNA/ITS databases – specifically 16S ribosomal RNA sequences. You can leave the rest of the options at the default settings, and run the search.
+Examine the results. 
 
 ### Exercise 1
-1.	How many protein sequences do you have for each genome, and how large are the plasmids?
-<model answer>
+1.	How many gene sequences are there in this genome genome, and how many gene sequences are their in this plasmid?
+*model answer*
 
 2.	What is the taxonomic identity of each of your isolates based on their 16S rRNA gene sequence? How similar is it to known reference strains?
-<model answer>
+Pseudomonas aeruginosa HS18-89
+Klebsiella pneumoniae HS11286
+Staphylococcus aureus Gv51
 
 Now we know what species these isolates are, we want to search their genes to determine if any of them are ARGs. For this we use DIAMOND, a sequence alignment tool which works similarly to BLAST but runs faster when searching a lot of sequences.
 
 A copy of the Comprehensive Antibiotic Resistance Database (CARD) has been provided to you. To use it with DIAMOND, we need to make a DIAMOND database – a version of the database that can be recognised and searched by DIAMOND.
 
 ```
-diamond makedb --in protein_fasta_protein_homolog_model.fasta -d CARD.dmnd
+diamond makedb --in CARD.faa -d CARD.dmnd
 ```
 
 Then, we can run DIAMOND using the new CARD file as a database. We are using the blastp function from DIAMOND, because we are comparing a protein query (the proteins from the isolate) with a protein database (CARD). So we don’t have to run it three times, we’ll run it in a loop on all three isolate files:
 ```
-for isolate in *.faa
+for isolate in *.fna
 do
 name=”$(basename -- $isolate | sed ‘s/.faa//’)”
-diamond blastp --db CARD.dmnd --query $isolate --out “$isolate”_CARD_results.txt –outfmt 6 --max-target-seqs 1 --max-hsps 1 --id 50
+diamond blastx --db CARD.dmnd --query $isolate --out “$isolate”_CARD_results.txt –outfmt 6 --max-target-seqs 1 --max-hsps 1 --id 50
 done
 ```
 **What’s happening?**
@@ -108,7 +118,7 @@ During your analysis you notice something strange – even though the [species n
 First, let’s rule out a simple mistake – perhaps your collaborator got the files mixed up and they’ve given you the protein sequences from the wrong organism. Let’s check some of the proteins from the isolate to confirm that it is what we think it is.
 
 Take the first few proteins in the file:
-`head -n 4 isolate.faa`
+`head -n 10 C_genome.fna`
 
 Copy these and check them in NCBI BLAST. This time, use Protein BLAST and leave all of the settings at their default.
 The closest match should correspond with the 16S rRNA sequence file that identifies this isolate as [species name].
@@ -135,5 +145,3 @@ Use less to view the results for each plasmid.
  
 # Misc
 [where to look for plasmids and genomes](https://www.ncbi.nlm.nih.gov/genome/browse#!/prokaryotes/Pseudomonas%20aeruginosa)
-[Plasmid sequence of Pseudomonas aeruginosa HS18-89](https://www.ncbi.nlm.nih.gov/nuccore/CP084322.1?report=fasta)
-[Genbank site for Pseudomonas aeruginosa HS18-89](https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/028/751/785/GCA_028751785.1_ASM2875178v1/)
