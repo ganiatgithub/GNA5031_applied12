@@ -29,14 +29,15 @@ In this workshop you will analyse this data to identify the ARGs in these isolat
 ## Part 1: Identify the isolates and search their genomes for ARGs
 
 ### Login to virtual machine
-[Instructions in detail](https://docs.google.com/document/d/1WBYDpS5utSvHylmRrgBNzXmZwQ74kTkv/edit)
-
+[list of VMs](https://docs.google.com/document/d/10xCfnzVv0f3GhByf5eI0TuRFphFmW9MwhVV2dWdaksE/edit#heading=h.hp02g0aoh97y)
+[Instructions for VM login in detail (example from week 2)](https://docs.google.com/document/d/1WBYDpS5utSvHylmRrgBNzXmZwQ74kTkv/edit)
 ```
 ssh -x gnii0001@gna5031s1-gnii0001-01.rep.monash.edu # currently na
 # next type in your passwords
 ```
 
 ### Obtain data and software
+Once logged in, use the following commands to obtain software and data.
 
 ```
 conda activate gna5031
@@ -55,18 +56,20 @@ Let’s start by checking the files you have been given. Use the following scrip
 
 ```
 cd data
-head genome.fna
-less genome.fna
-seqkit stats genome.fna
+head A_genome.fna
+less A_genome.fna
+seqkit stats A_genome.fna
 ```
 
 It would be helpful to know which organisms we’re dealing with, so let’s check those 16S rRNA sequences to identify what these organisms are.
-Head to NCBI BLAST and select BLASTn. Copy the sequence into the query box, and change the search to BLAST against rRNA/ITS databases – specifically 16S ribosomal RNA sequences. You can leave the rest of the options at the default settings, and run the search.
+Head to NCBI BLAST and select[BLASTn](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PROGRAM=blastn&BLAST_SPEC=GeoBlast&PAGE_TYPE=BlastSearch). Copy the sequence into the query box, and change the search to BLAST against rRNA/ITS databases – specifically 16S ribosomal RNA sequences. You can leave the rest of the options at the default settings, and run the search.
 Examine the results. 
 
 ### Exercise 1
 1.	How many gene sequences are there in this genome genome, and how many gene sequences are their in this plasmid?
-*model answer*
+A: 6522
+B: 5779
+C: 2914
 
 2.	What is the taxonomic identity of each of your isolates based on their 16S rRNA gene sequence? How similar is it to known reference strains?
 Pseudomonas aeruginosa HS18-89
@@ -83,10 +86,14 @@ diamond makedb --in CARD.faa -d CARD.dmnd
 
 Then, we can run DIAMOND using the new CARD file as a database. We are using the blastp function from DIAMOND, because we are comparing a protein query (the proteins from the isolate) with a protein database (CARD). So we don’t have to run it three times, we’ll run it in a loop on all three isolate files:
 ```
-for isolate in *.fna
+for isolate in *_genome.fna
 do
-name=”$(basename -- $isolate | sed ‘s/.faa//’)”
-diamond blastx --db CARD.dmnd --query $isolate --out “$isolate”_CARD_results.txt –outfmt 6 --max-target-seqs 1 --max-hsps 1 --id 50
+  if [ -s "$isolate" ]; then
+    echo "Processing $isolate"
+    name="$(basename -- "$isolate" | sed 's/_genome.fna//')"
+    echo "Name is $name"
+    diamond blastx -d CARD.dmnd -q "$isolate" -o results/"${name}_genome_CARD_results.txt" --outfmt 6 --max-target-seqs 1 --max-hsps 1 --id 50
+    fi
 done
 ```
 **What’s happening?**
@@ -100,7 +107,7 @@ Then, the diamond blastp command takes our new CARD.dmnd database and our isolat
 •	--max-hsps-1: DIAMOND will output only one best ‘high scoring pair’ per alignment. This prevents matches appearing twice if the query protein happens to align equally well in more than one place on the same database protein.
 •	--id 50: This controls the minimum percentage identity between the query and database proteins. For proteins, 50% is considered a generous match to allow ARGs less similar to the reference sequences to be picked up.
 The loop is closed with done, and you should have one DIAMOND results file for each isolate, named appropriately.
-Have a look at each of these files with cat <file>
+Have a look at each of these files with `cat A_genome_CARD_results.txt`
 
 ### Exercise 2
 1.	How many ARGs have been identified in each genome, and how similar are they to known reference ARG sequences?
@@ -129,8 +136,18 @@ Using the CARD database we made, let’s query it with the plasmid sequences the
 ```
 for plasmid in *plasmid.fna
 do
-name=”$(basename -- $plasmid | sed ‘s/.fna//’)”
+name="$(basename -- $plasmid | sed 's/_plasmid.fna//')"
 diamond blastx --db CARD.dmnd --query $plasmid --out “$isolate”_plasmid_results.txt –outfmt 6 --max-target-seqs 1 --max-hsps 1 --id 50
+done
+
+for isolate in *_plasmid.fna
+do
+  if [ -s "$isolate" ]; then
+    echo "Processing $isolate"
+    name="$(basename -- "$isolate" | sed 's/_plasmid.fna//')"
+    echo "Name is $name"
+    diamond blastx -d CARD.dmnd -q "$isolate" -o results/"${name}_plasmid_CARD_results.txt" --outfmt 6 --max-target-seqs 1 --max-hsps 1 --id 50
+    fi
 done
 ```
 
