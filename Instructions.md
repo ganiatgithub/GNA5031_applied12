@@ -33,6 +33,29 @@ It would be helpful to know which organisms we’re dealing with, so let’s che
 Head to NCBI BLAST and select BLASTn. Copy the sequence into the query box, and change the search to BLAST against rRNA/ITS databases – specifically 16S ribosomal RNA sequences. You can leave the rest of the options at the default settings, and run the search.
 Examine the results. 
 
+### Login to virtual machine
+[Instructions in detail](https://docs.google.com/document/d/1WBYDpS5utSvHylmRrgBNzXmZwQ74kTkv/edit)
+
+```
+ssh -x gnii0001@gna5031s1-gnii0001-01.rep.monash.edu # currently na
+# next type in your passwords
+```
+
+### Obtain data and software
+
+```
+conda activate gna5031
+
+conda install -c bioconda diamond
+
+diamond help # test if diamond has been installed
+
+conda install -c bioconda seqkit
+seqkit -v # test if seqkit has been instaled
+
+git clone https://github.com/ganiatgithub/GNA5031_applied12.git # obtain all information needed for this session.
+```
+
 ### Exercise 1
 1.	How many protein sequences do you have for each genome, and how large are the plasmids?
 <model answer>
@@ -110,3 +133,7 @@ Use less to view the results for each plasmid.
 3.	If you had metagenomic data in addition to these isolates, how would you make use of both datasets? What further analyses could be done to assist your collaborator in understanding where the antimicrobial resistance is coming from, and how they may recommend the farmer to approach treatment for the animals?
  
  
+# Misc
+[where to look for plasmids and genomes](https://www.ncbi.nlm.nih.gov/genome/browse#!/prokaryotes/Pseudomonas%20aeruginosa)
+[Plasmid sequence of Pseudomonas aeruginosa HS18-89](https://www.ncbi.nlm.nih.gov/nuccore/CP084322.1?report=fasta)
+[Genbank site for Pseudomonas aeruginosa HS18-89](https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/028/751/785/GCA_028751785.1_ASM2875178v1/)
