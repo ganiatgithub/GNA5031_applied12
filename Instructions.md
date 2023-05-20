@@ -6,10 +6,10 @@
 
 At the conclusion of this session, students should be able to:
 
-•	Examine different genomic sequence files and understand their content
-•	Query an antimicrobial resistance gene (ARG) database to identify likely ARGs within genomes and plasmids
-•	Use BLAST to identify an organism by its 16S rRNA genome sequence
-•	Explain the benefits and implications of searching chromosomes compared to plasmids for ARGs
+- Examine different genomic sequence files and understand their content
+- Query an antimicrobial resistance gene (ARG) database to identify likely ARGs within genomes and plasmids
+- Use BLAST to identify an organism by its 16S rRNA genome sequence
+- Explain the benefits and implications of searching chromosomes compared to plasmids for ARGs
 
 Software required: `DIAMOND`, `seqkit`, text editing software (`BBedit` for Mac, `Notepad++` for PC), `Microsoft excel`
  
