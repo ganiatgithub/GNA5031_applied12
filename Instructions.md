@@ -1,4 +1,4 @@
-# GNA5031 Applied Session 11
+# GNA5031 Applied Session 12
 
 **Case study on the antibiotic resistome**
 
