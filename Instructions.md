@@ -79,7 +79,7 @@ Examine the results.
 
 Now we know what species these isolates are, we want to search their genes to determine if any of them are ARGs. For this we use DIAMOND, a sequence alignment tool which works similarly to BLAST but runs faster when searching a lot of sequences.
 
-A copy of the Comprehensive Antibiotic Resistance Database (CARD) has been provided to you. To use it with DIAMOND, we need to make a DIAMOND database – a version of the database that can be recognised and searched by DIAMOND.
+A copy of the Comprehensive Antibiotic Resistance Database [(CARD)](https://card.mcmaster.ca/) has been provided to you. CARD is a rigorously curated collection of known resistance determinants and associated antibiotics. To use it with DIAMOND, we need to make a DIAMOND database – a version of the database that can be recognised and searched by DIAMOND.
 
 ```
 diamond makedb --in CARD.faa -d CARD.dmnd
@@ -104,13 +104,18 @@ This command begins by running a loop on all three isolate files: for each one (
 What it does for each file is define the “name” variable, which is simply the sample name. The basename command strips any directory names that might come before the filename, then sed removes the .faa extension. This leaves us with the isolate name in the $name variable, which we use to name the output files.
 Then, the diamond blastp command takes our new CARD.dmnd database and our isolate proteins, and searches those proteins in the database. The --out flag allows us to name the output file (which uses the isolate name, coming from the $name variable we defined above). We add a few additional options to the end to control our output:
 
-- --outfmt 6: DIAMOND has several options for its output, this is a tabular format 
+- --outfmt 6: DIAMOND has several options for its output, this is a tabular format. See Glossary for details.
 - --max-target-seqs 1: DIAMOND will output only one best hit when a protein matches something in the database
 - --max-hsps-1: DIAMOND will output only one best ‘high scoring pair’ per alignment. This prevents matches appearing twice if the query protein happens to align equally well in more than one place on the same database protein.
 - --id 70: This controls the minimum percentage identity between the query and database proteins. For proteins, 70% is considered a strict match to allow ARGs less similar to the reference sequences to be picked up.
 
 The loop is closed with done, and you should have one DIAMOND results file for each isolate, named appropriately.
-Have a look at each of these files with `cat A_genome_CARD_results.txt`
+Have a look at each of these files with `cat A_genome_CARD_results.txt`. What information do you find useful?
+
+Many ARGs seems to be identified, but how to further interpret the data?
+
+We have a helper tool: `annotate.py`
+
 
 ### Exercise 2
 1.	How many ARGs have been identified in each genome, and how similar are they to known reference ARG sequences?
@@ -157,22 +162,31 @@ Use less to view the results for each plasmid.
 3.	If you had metagenomic data in addition to these isolates, how would you make use of both datasets? What further analyses could be done to assist your collaborator in understanding where the antimicrobial resistance is coming from, and how they may recommend the farmer to approach treatment for the animals?
 
 # Glossary
+
+## Diamond Tabular Output format
 The following fields are the column headers of Diamond Blast tabular output format 6:
+
 `qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore`
 
 Explanation:
-- qseqid: query or source sequence id
-- sseqid: subject or reference sequence id
-- pident: percentage of identical positions
-- length: alignment length (sequence overlap)
-- mismatch: number of mismatches
-- gapopen: number of gap openings
-- qstart: start of alignment in query
-- qend: end of alignment in query
-- sstart: start of alignment in subject
-- send: end of alignment in subject
-- evalue: [expect value](https://www.metagenomics.wiki/tools/blast/evalue)
-- bitscore: [bit score](https://www.metagenomics.wiki/tools/blast/evalue)
+- `qseqid`: query or source sequence id
+- `sseqid`: subject or reference sequence id
+- `pident`: percentage of identical positions
+- `length`: alignment length (sequence overlap)
+- `mismatch`: number of mismatches
+- `gapopen`: number of gap openings
+- `qstart`: start of alignment in query
+- `qend`: end of alignment in query
+- `sstart`: start of alignment in subject
+- `send`: end of alignment in subject
+- `evalue`: [expect value](https://www.metagenomics.wiki/tools/blast/evalue)
+- `bitscore`: [bit score](https://www.metagenomics.wiki/tools/blast/evalue)
+
+## Carbapenem
+Carbapenems, among the beta-lactams, are the most effective against Gram-positive and Gram-negative bacteria presenting a broad spectrum of antibacterial activity. Carbapenems are considered to be the most reliable last-resort treatment for bacterial infections, therefore, the emergence and rapid spread through all continents of carbapenem resistance, mainly among Gram-negative bacteria, constitutes a global public-healthcare problem of major importance. [Meletis 2016](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4735501/)
+
+## Tetracycline
+Tetracycline antibiotics are well known for their broad spectrum of activity, spanning a wide range of Gram-positive and -negative bacteria, spirochetes, obligate intracellular bacteria, as well as protozoan parasites. Several of tetracyclines remain in clinical use for the treatment of uncomplicated respiratory, urogenital, gastrointestinal, and other rare and serious infections; however, the dissemination of tetracycline-resistant mechanisms has narrowed their utility, limiting use to only infections with confirmed susceptibility. [Grossman 2016](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4817740/)
 
 # Misc
 [where to look for plasmids and genomes](https://www.ncbi.nlm.nih.gov/genome/browse#!/prokaryotes/Pseudomonas%20aeruginosa)

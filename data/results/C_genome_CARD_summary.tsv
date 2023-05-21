@@ -1,0 +1,32 @@
+qseqid	Drug Class	Resistance Mechanism
+lcl|CP012015.1_cds_ALY26057.1_41	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP012015.1_cds_ALY24703.1_42	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP012015.1_cds_ALY26056.1_1803	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP012015.1_cds_ALY27327.1_1804	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP012015.1_cds_ALY24704.1_43	lincosamide antibiotic;macrolide antibiotic;streptogramin A antibiotic;streptogramin B antibiotic;streptogramin antibiotic	antibiotic target alteration
+lcl|CP012015.1_cds_ALY26055.1_1802	lincosamide antibiotic;macrolide antibiotic;streptogramin A antibiotic;streptogramin B antibiotic;streptogramin antibiotic	antibiotic target alteration
+lcl|CP012015.1_cds_ALY24723.1_67	carbapenem;cephalosporin;cephamycin;monobactam;penam	antibiotic target replacement
+lcl|CP012015.1_cds_ALY26936.1_68	carbapenem;cephalosporin;cephamycin;monobactam;penam	antibiotic target replacement
+lcl|CP012015.1_cds_ALY24724.1_69	carbapenem;cephalosporin;cephamycin;monobactam;penam	antibiotic target replacement
+lcl|CP012015.1_cds_ALY24759.1_114	disinfecting agents and antiseptics;fluoroquinolone antibiotic	antibiotic efflux
+lcl|CP012015.1_cds_ALY25833.1_1516	disinfecting agents and antiseptics;fluoroquinolone antibiotic	antibiotic efflux
+lcl|CP012015.1_cds_ALY26958.1_144	tetracycline antibiotic	antibiotic efflux
+lcl|CP012015.1_cds_ALY26999.1_342	glycylcycline;tetracycline antibiotic	antibiotic efflux
+lcl|CP012015.1_cds_ALY24933.1_343	glycylcycline;tetracycline antibiotic	antibiotic efflux
+lcl|CP012015.1_cds_ALY24949.1_367	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP012015.1_cds_ALY27006.1_368	nucleoside antibiotic	antibiotic inactivation
+lcl|CP012015.1_cds_ALY24950.1_369	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP012015.1_cds_ALY27022.1_421	tetracycline antibiotic	antibiotic target protection
+lcl|CP012015.1_cds_ALY25220.1_728	cephalosporin;disinfecting agents and antiseptics;fluoroquinolone antibiotic;penam;peptide antibiotic;tetracycline antibiotic	antibiotic efflux
+lcl|CP012015.1_cds_ALY25225.1_740	fluoroquinolone antibiotic	antibiotic efflux
+lcl|CP012015.1_cds_ALY25815.1_1492	disinfecting agents and antiseptics;fluoroquinolone antibiotic	antibiotic efflux
+lcl|CP012015.1_cds_ALY25816.1_1493	disinfecting agents and antiseptics;fluoroquinolone antibiotic	antibiotic efflux
+lcl|CP012015.1_cds_ALY25826.1_1506	diaminopyrimidine antibiotic	antibiotic target replacement
+lcl|CP012015.1_cds_ALY26382.1_2220	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP012015.1_cds_ALY26394.1_2239	aminoglycoside antibiotic	antibiotic efflux
+lcl|CP012015.1_cds_ALY27448.1_2326	aminoglycoside antibiotic;diaminopyrimidine antibiotic;macrolide antibiotic;oxazolidinone antibiotic;phenicol antibiotic	antibiotic efflux
+lcl|CP012015.1_cds_ALY27449.1_2327	disinfecting agents and antiseptics	antibiotic efflux
+lcl|CP012015.1_cds_ALY26465.1_2328	disinfecting agents and antiseptics;fluoroquinolone antibiotic	antibiotic efflux
+lcl|CP012015.1_cds_ALY26599.1_2500	phosphonic acid antibiotic	antibiotic inactivation
+lcl|CP012015.1_cds_ALY26803.1_2762	penam	antibiotic inactivation
+lcl|CP012016.1_cds_ALY27589.1_2914	phenicol antibiotic	antibiotic inactivation

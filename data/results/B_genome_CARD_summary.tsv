@@ -1,0 +1,63 @@
+qseqid	Drug Class	Resistance Mechanism
+lcl|CP003200.1_cds_AEW58769.1_71	aminocoumarin antibiotic;aminoglycoside antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW59301.1_603	phosphonic acid antibiotic	antibiotic inactivation
+lcl|CP003200.1_cds_AEW59311.1_613	disinfecting agents and antiseptics;fluoroquinolone antibiotic;lincosamide antibiotic;nucleoside antibiotic;phenicol antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW59461.1_763	aminocoumarin antibiotic;peptide antibiotic;rifamycin antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW59495.1_797	disinfecting agents and antiseptics;nucleoside antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW59886.1_1188	cephalosporin;disinfecting agents and antiseptics;fluoroquinolone antibiotic;glycylcycline;penam;phenicol antibiotic;rifamycin antibiotic;tetracycline antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW59887.1_1189	cephalosporin;disinfecting agents and antiseptics;fluoroquinolone antibiotic;glycylcycline;penam;phenicol antibiotic;rifamycin antibiotic;tetracycline antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW59903.1_1205	peptide antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW59906.1_1208	peptide antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW60087.1_1389	carbapenem;cephalosporin;cephamycin;disinfecting agents and antiseptics;fluoroquinolone antibiotic;glycylcycline;monobactam;penam;penem;phenicol antibiotic;rifamycin antibiotic;tetracycline antibiotic	antibiotic efflux;reduced permeability to antibiotic
+lcl|CP003200.1_cds_AEW60244.1_1546	aminoglycoside antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW60333.1_1635	peptide antibiotic	antibiotic target alteration
+lcl|CP003200.1_cds_AEW60407.1_1709	disinfecting agents and antiseptics;tetracycline antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW60519.1_1821	nitroimidazole antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW60563.1_1865	peptide antibiotic	reduced permeability to antibiotic
+lcl|CP003200.1_cds_AEW60641.1_1943	phosphonic acid antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW60652.1_1954	fluoroquinolone antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW61050.1_2352	carbapenem;cephalosporin;cephamycin;monobactam;penam;penem	reduced permeability to antibiotic
+lcl|CP003200.1_cds_AEW61172.1_2474	aminoglycoside antibiotic;cephalosporin;disinfecting agents and antiseptics;macrolide antibiotic;peptide antibiotic;rifamycin antibiotic;tetracycline antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW61173.1_2475	aminoglycoside antibiotic;cephalosporin;disinfecting agents and antiseptics;macrolide antibiotic;peptide antibiotic;rifamycin antibiotic;tetracycline antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW61220.1_2522	carbapenem;cephalosporin;penam	antibiotic inactivation
+lcl|CP003200.1_cds_AEW61245.1_2547	carbapenem;cephalosporin;cephamycin;disinfecting agents and antiseptics;fluoroquinolone antibiotic;glycylcycline;monobactam;penam;penem;phenicol antibiotic;rifamycin antibiotic;tetracycline antibiotic	antibiotic efflux;reduced permeability to antibiotic
+lcl|CP003200.1_cds_AEW61896.1_3198	cephalosporin;cephamycin;fluoroquinolone antibiotic;macrolide antibiotic;penam;tetracycline antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW62204.1_3505	fluoroquinolone antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW62252.1_3554	peptide antibiotic	antibiotic target alteration
+lcl|CP003200.1_cds_AEW62284.1_3586	aminocoumarin antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW62285.1_3587	aminocoumarin antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW62286.1_3588	aminocoumarin antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW62288.1_3590	aminocoumarin antibiotic;aminoglycoside antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW62289.1_3591	aminocoumarin antibiotic;aminoglycoside antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW62395.1_3697	peptide antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW62572.1_3874	aminoglycoside antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW62785.1_4087	fluoroquinolone antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW62787.1_4089	aminoglycoside antibiotic;carbapenem;cephalosporin;fluoroquinolone antibiotic;macrolide antibiotic;penam;penem;peptide antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW62788.1_4090	aminoglycoside antibiotic;carbapenem;cephalosporin;fluoroquinolone antibiotic;macrolide antibiotic;penam;penem;peptide antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW62797.1_4099	diaminopyrimidine antibiotic;fluoroquinolone antibiotic;phenicol antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW63274.1_4576	aminocoumarin antibiotic;aminoglycoside antibiotic;carbapenem;cephalosporin;cephamycin;disinfecting agents and antiseptics;fluoroquinolone antibiotic;glycylcycline;macrolide antibiotic;penam;penem;peptide antibiotic;phenicol antibiotic;rifamycin antibiotic;tetracycline antibiotic	antibiotic efflux
+lcl|CP003200.1_cds_AEW63288.1_4590	peptide antibiotic	antibiotic target alteration
+lcl|CP003200.1_cds_AEW63524.1_4826	cephalosporin;cephamycin;fluoroquinolone antibiotic;penam	antibiotic efflux
+lcl|CP003200.1_cds_AEW63525.1_4827	cephalosporin;cephamycin;fluoroquinolone antibiotic;penam	antibiotic efflux
+lcl|CP003200.1_cds_AEW63592.1_4894	fluoroquinolone antibiotic;macrolide antibiotic;penam	antibiotic efflux
+lcl|CP003200.1_cds_AEW63696.1_4998	peptide antibiotic	antibiotic target alteration
+lcl|CP003200.1_cds_AEW63699.1_5001	peptide antibiotic	antibiotic target alteration
+lcl|CP003200.1_cds_AEW63760.1_5062	peptide antibiotic	antibiotic target alteration
+lcl|CP003223.1_cds_AEW91942.1_5350	cephalosporin	antibiotic inactivation
+lcl|CP003225.1_cds_AEW92340.1_5748	cephalosporin	antibiotic inactivation
+lcl|CP003224.1_cds_AEW92085.1_5493	carbapenem;cephalosporin;monobactam;penam	antibiotic inactivation
+lcl|CP003224.1_cds_AEW92113.1_5521	cephalosporin;monobactam;penam;penem	antibiotic inactivation
+lcl|CP003225.1_cds_AEW92263.1_5671	cephalosporin;monobactam;penam;penem	antibiotic inactivation
+lcl|CP003225.1_cds_AEW92293.1_5701	cephalosporin;monobactam;penam;penem	antibiotic inactivation
+lcl|CP003225.1_cds_AEW92264.1_5672	aminoglycoside antibiotic	antibiotic target alteration
+lcl|CP003225.1_cds_AEW92272.1_5680	tetracycline antibiotic	antibiotic efflux
+lcl|CP003225.1_cds_AEW92275.1_5683	phenicol antibiotic	antibiotic efflux
+lcl|CP003225.1_cds_AEW92276.1_5684	sulfonamide antibiotic;sulfone antibiotic	antibiotic target replacement
+lcl|CP003225.1_cds_AEW92277.1_5685	disinfecting agents and antiseptics	antibiotic efflux
+lcl|CP003225.1_cds_AEW92278.1_5686	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP003225.1_cds_AEW92281.1_5689	diaminopyrimidine antibiotic	antibiotic target replacement
+lcl|CP003225.1_cds_AEW92282.1_5690	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP003225.1_cds_AEW92285.1_5693	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP003225.1_cds_AEW92295.1_5703	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP003225.1_cds_AEW92296.1_5704	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP003225.1_cds_AEW92297.1_5705	sulfonamide antibiotic;sulfone antibiotic	antibiotic target replacement
