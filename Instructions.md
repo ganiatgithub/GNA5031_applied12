@@ -114,8 +114,9 @@ Have a look at each of these files with `cat A_genome_CARD_results.txt`. What in
 
 Many ARGs seems to be identified, but how to further interpret the data?
 
-We have a helper tool: `annotate.py`
+We have a helper tool: `annotate.py`, which follows the workflow below:
 
+![alt](https://github.com/ganiatgithub/GNA5031_applied12/blob/main/materials/annotate.png)
 
 ### Exercise 2
 1.	How many ARGs have been identified in each genome, and how similar are they to known reference ARG sequences?
