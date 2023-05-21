@@ -129,19 +129,25 @@ To run this script:
 
 ### Exercise 2
 1.	How many ARGs have been identified in each genome, and how similar are they to known reference ARG sequences?
+
 *model answer*
+
 - A: 59 ARGs, all above 70% threshold cut off, some are 100% identicial to what has been curated in CARD.
 - B: 62 ARGs, all above 70% threshold cut off, some are 100% identicial to what has been curated in CARD.
 - C: 28 ARGs, all above 70% threshold cut off, some are 100% identicial to what has been curated in CARD.
 
 2.	Summarise the ARGs for each isolate and the class of antibiotics they confer resistance to. Which antibiotics would you recommend your collaborator use to continue the culture of these isolates?
+
 *model answer*
+
 - A: disinfecting agents, aminocoumarin, **carbapenem**, diaminopyrimidine, monobactam, tetracycline
 - B: disinfecting agents, aminocoumarin, **carbapenem**, peptide antibiotic, fluoroquinolone
 - C: disinfecting agents, aminoglycoside antibiotic, glycylcycline;tetracycline antibiotic
 
 3.	Based on your results, what is clear about the antimicrobial resistance in these three isolates. Is there anything unclear?
+
 *model answer*
+
 All three isolates contains resistance to multiple antimicrobial mechanisms. Especially, both A and B are shown to resist to carbapenem, which coinsides with what our collaborator has reported.
 However, it is unclear why C is shown to resist to carbapenem, but there is no genes related to carbapenem resistance in it's genome.
  
@@ -156,6 +162,7 @@ Take the first few proteins in the file:
 Copy these and check them in [NCBI BLASTn](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PROGRAM=blastn&BLAST_SPEC=GeoBlast&PAGE_TYPE=BlastSearch). This time, use Protein BLAST and leave all of the settings at their default.
 
 *model answer*
+
 The closest match correspond with the 16S rRNA sequence file that identifies this isolate as Staphylococcus aureus.
 Therefore, there shouldn't be a mixed up.
 
