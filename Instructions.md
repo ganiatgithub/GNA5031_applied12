@@ -93,7 +93,7 @@ do
     echo "Processing $isolate"
     name="$(basename -- "$isolate" | sed 's/_genome.fna//')"
     echo "Name is $name"
-    diamond blastx -d CARD.dmnd -q "$isolate" -o results/"${name}_genome_CARD_results.txt" --outfmt 6 --max-target-seqs 1 --max-hsps 1 --id 50
+    diamond blastx -d CARD.dmnd -q "$isolate" -o results/"${name}_genome_CARD_results.txt" --outfmt 6 --max-target-seqs 1 --max-hsps 1 --id 70
     fi
 done
 ```
@@ -107,7 +107,7 @@ Then, the diamond blastp command takes our new CARD.dmnd database and our isolat
 - --outfmt 6: DIAMOND has several options for its output, this is a tabular format 
 - --max-target-seqs 1: DIAMOND will output only one best hit when a protein matches something in the database
 - --max-hsps-1: DIAMOND will output only one best ‘high scoring pair’ per alignment. This prevents matches appearing twice if the query protein happens to align equally well in more than one place on the same database protein.
-- --id 50: This controls the minimum percentage identity between the query and database proteins. For proteins, 50% is considered a generous match to allow ARGs less similar to the reference sequences to be picked up.
+- --id 70: This controls the minimum percentage identity between the query and database proteins. For proteins, 70% is considered a strict match to allow ARGs less similar to the reference sequences to be picked up.
 
 The loop is closed with done, and you should have one DIAMOND results file for each isolate, named appropriately.
 Have a look at each of these files with `cat A_genome_CARD_results.txt`
@@ -137,25 +137,19 @@ It’s likely that the resistant phenotype in this isolate comes from an ARG on 
 Using the CARD database we made, let’s query it with the plasmid sequences the collaborator provided. These are nucleotide sequences (you can see this when you check the file with head), so this time we use the blastx command, which takes a DNA sequence, translates to a protein sequence in all 6 open reading frames, and aligns them to the protein database.
 
 ```
-for plasmid in *plasmid.fna
-do
-name="$(basename -- $plasmid | sed 's/_plasmid.fna//')"
-diamond blastx --db CARD.dmnd --query $plasmid --out “$isolate”_plasmid_results.txt –outfmt 6 --max-target-seqs 1 --max-hsps 1 --id 50
-done
-
 for isolate in *_plasmid.fna
 do
   if [ -s "$isolate" ]; then
     echo "Processing $isolate"
     name="$(basename -- "$isolate" | sed 's/_plasmid.fna//')"
     echo "Name is $name"
-    diamond blastx -d CARD.dmnd -q "$isolate" -o results/"${name}_plasmid_CARD_results.txt" --outfmt 6 --max-target-seqs 1 --max-hsps 1 --id 50
+    diamond blastx -d CARD.dmnd -q "$isolate" -o results/"${name}_plasmid_CARD_results.txt" --outfmt 6 --max-target-seqs 1 --max-hsps 1 --id 70
     fi
 done
 ```
-
 This command works exactly the same as the blastp command before.
 Use less to view the results for each plasmid.
+
 ### Exercise 3
 
 1.	What ARGs are present on the plasmids, and what’s the taxonomy associated with the reference sequence that they most closely match?
