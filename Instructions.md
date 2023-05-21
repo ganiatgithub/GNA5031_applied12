@@ -18,7 +18,8 @@ Software required: `DIAMOND`, `seqkit`, text editing software (`BBedit` for Mac,
 The antibiotic resistome refers to the collection of all antimicrobial resistance genes (ARGs) in both pathogenic and non-pathogenic bacteria. To understand the resistome of a particular environment or setting, metagenomic sequencing can be used to examine the genomes of all microbial community members and profile the ARGs they contain. However, depending on the depth of sequencing and the success of metagenome assembly efforts, with this approach it may be challenging to link ARGs with the organisms that have them, to verify whether the presence of such genes corresponds to an antibiotic resistance phenotype, and to understand transmission dynamics. 
 
 In this case scenario, a collaborator has been studying antimicrobial resistant bacteria in agricultural runoff from a dairy farm. Recent infections in the cows have not resolved despite the farmer’s use of antibiotics, and there is concern that the farm’s runoff may be a hotspot for antimicrobial resistance that may be entering nearby waterways.
-Using a range of antibiotic selection agar plates to culture bacteria from the runoff, your collaborator has isolated a number of bacterial strains that grow in the presence of antibiotics. Three of these isolates exhibited high levels of resistance and your collaborator wishes to investigate them further. They have done some initial analyses and provided you with three files for each isolate:
+
+Using a range of antibiotic selection agar plates to culture bacteria from the runoff, your collaborator has isolated a number of bacterial strains that grow in the presence of antibiotics, specially **carbapenem**. Three of these isolates exhibited high levels of resistance and your collaborator wishes to investigate them further. They have done some initial analyses and provided you with three files for each isolate:
 
 1.	They initially conducted 16S rRNA sequencing of each isolate they found, to taxonomically identify them. They have provided you with the 16S rRNA sequence for each of the three concerning isolates in nucleotide format. `_16S.fna`
 2.	They have sequenced the genomes of these isolates and have provided you with the set of predicted protein sequences from each genome. `_genome.fna`
@@ -114,31 +115,50 @@ Have a look at each of these files with `cat A_genome_CARD_results.txt`. What in
 
 Many ARGs seems to be identified, but how to further interpret the data?
 
-We have a helper tool: `annotate.py`, which follows the workflow below:
+We have a helper tool: `annotate.py`, which uses the CARD Short Name from blast output (such as `A_genome_results.tsv`) to query the `CARD_metadata.tsv`, to obatin information such as Drug Class and Resistance Mechanism, summarised in such as `A_genome_summary.tsv`
 
 ![alt](https://github.com/ganiatgithub/GNA5031_applied12/blob/main/materials/annotate.png)
 
+To run this script:
+
+```
+./annotate.py ./results/A_genome_CARD_results.txt CARD_metadata.tsv ./results/A_genome_CARD_summary.tsv
+./annotate.py ./results/B_genome_CARD_results.txt CARD_metadata.tsv ./results/B_genome_CARD_summary.tsv
+./annotate.py ./results/C_genome_CARD_results.txt CARD_metadata.tsv ./results/C_genome_CARD_summary.tsv
+```
+
 ### Exercise 2
 1.	How many ARGs have been identified in each genome, and how similar are they to known reference ARG sequences?
-<model answer>
+*model answer*
+- A: 59 ARGs, all above 70% threshold cut off, some are 100% identicial to what has been curated in CARD.
+- B: 62 ARGs, all above 70% threshold cut off, some are 100% identicial to what has been curated in CARD.
+- C: 28 ARGs, all above 70% threshold cut off, some are 100% identicial to what has been curated in CARD.
 
 2.	Summarise the ARGs for each isolate and the class of antibiotics they confer resistance to. Which antibiotics would you recommend your collaborator use to continue the culture of these isolates?
-<model answer>
+*model answer*
+- A: disinfecting agents, aminocoumarin, **carbapenem**, diaminopyrimidine, monobactam, tetracycline
+- B: disinfecting agents, aminocoumarin, **carbapenem**, peptide antibiotic, fluoroquinolone
+- C: disinfecting agents, aminoglycoside antibiotic, glycylcycline;tetracycline antibiotic
 
-3.	Based on your results, it is clear that the genotype may not match the phenotype. Why might this be the case? How would you suggest your collaborator determine whether the isolates are indeed resistant to these antibiotics? 
-<model answer>
+3.	Based on your results, what is clear about the antimicrobial resistance in these three isolates. Is there anything unclear?
+*model answer*
+All three isolates contains resistance to multiple antimicrobial mechanisms. Especially, both A and B are shown to resist to carbapenem, which coinsides with what our collaborator has reported.
+However, it is unclear why C is shown to resist to carbapenem, but there is no genes related to carbapenem resistance in it's genome.
  
 ## Part 2: Identifying plasmid-borne ARGs and making recommendations
-During your analysis you notice something strange – even though the **species name - maybe C?** isolate came from antibiotic selection, it doesn’t seem to contain any ARGs. What’s going on? Let’s do some forensic bioinformatics.
+During your analysis you notice something strange – even though the isolate C came from antibiotic selection, it doesn’t seem to contain any ARGs. What’s going on? Let’s do some forensic bioinformatics.
 
 First, let’s rule out a simple mistake – perhaps your collaborator got the files mixed up and they’ve given you the protein sequences from the wrong organism. Let’s check some of the proteins from the isolate to confirm that it is what we think it is.
 
 Take the first few proteins in the file:
 `head -n 10 C_genome.fna`
 
-Copy these and check them in NCBI BLAST. This time, use Protein BLAST and leave all of the settings at their default.
-The closest match should correspond with the 16S rRNA sequence file that identifies this isolate as [species name].
-Why can’t we find a gene?
+Copy these and check them in [NCBI BLASTn](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PROGRAM=blastn&BLAST_SPEC=GeoBlast&PAGE_TYPE=BlastSearch). This time, use Protein BLAST and leave all of the settings at their default.
+
+*model answer*
+The closest match correspond with the 16S rRNA sequence file that identifies this isolate as Staphylococcus aureus.
+Therefore, there shouldn't be a mixed up.
+
 It’s likely that the resistant phenotype in this isolate comes from an ARG on the plasmid. Let’s check all the plasmids for ARGs.
 Using the CARD database we made, let’s query it with the plasmid sequences the collaborator provided. These are nucleotide sequences (you can see this when you check the file with head), so this time we use the blastx command, which takes a DNA sequence, translates to a protein sequence in all 6 open reading frames, and aligns them to the protein database.
 
@@ -155,6 +175,13 @@ done
 ```
 This command works exactly the same as the blastp command before.
 Use less to view the results for each plasmid.
+Again, we are using the annotate.py to contextualize the results:
+
+```
+./annotate.py ./results/A_plasmid_CARD_results.txt CARD_metadata.tsv ./results/A_plasmid_CARD_summary.tsv
+./annotate.py ./results/B_plasmid_CARD_results.txt CARD_metadata.tsv ./results/B_plasmid_CARD_summary.tsv
+./annotate.py ./results/C_plasmid_CARD_results.txt CARD_metadata.tsv ./results/C_plasmid_CARD_summary.tsv
+```
 
 ### Exercise 3
 
