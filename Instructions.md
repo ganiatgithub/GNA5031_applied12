@@ -155,6 +155,24 @@ Use less to view the results for each plasmid.
 1.	What ARGs are present on the plasmids, and what’s the taxonomy associated with the reference sequence that they most closely match?
 2.	Why are there inconsistencies between the taxonomy of the isolate and the ARGs found on the plasmids?
 3.	If you had metagenomic data in addition to these isolates, how would you make use of both datasets? What further analyses could be done to assist your collaborator in understanding where the antimicrobial resistance is coming from, and how they may recommend the farmer to approach treatment for the animals?
- 
+
+# Glossary
+The following fields are the column headers of Diamond Blast tabular output format 6:
+`qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore`
+
+Explanation:
+- qseqid: query or source sequence id
+- sseqid: subject or reference sequence id
+- pident: percentage of identical positions
+- length: alignment length (sequence overlap)
+- mismatch: number of mismatches
+- gapopen: number of gap openings
+- qstart: start of alignment in query
+- qend: end of alignment in query
+- sstart: start of alignment in subject
+- send: end of alignment in subject
+- evalue: [expect value](https://www.metagenomics.wiki/tools/blast/evalue)
+- bitscore: [bit score](https://www.metagenomics.wiki/tools/blast/evalue)
+
 # Misc
 [where to look for plasmids and genomes](https://www.ncbi.nlm.nih.gov/genome/browse#!/prokaryotes/Pseudomonas%20aeruginosa)
