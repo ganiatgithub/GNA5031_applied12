@@ -71,7 +71,7 @@ Examine the results.
 1.	How many gene sequences are there in this genome genome, and how many gene sequences are their in this plasmid?
 - A: 6522
 - B: 5779
-- C: 2914
+- C: 2911
 
 2.	What is the taxonomic identity of each of your isolates based on their 16S rRNA gene sequence? How similar is it to known reference strains?
 - A: Pseudomonas aeruginosa HS18-89
