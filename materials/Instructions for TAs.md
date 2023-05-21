@@ -1,4 +1,4 @@
-# GNA5031 Applied Session 12
+# GNA5031 Applied Session 12 - TA's copy
 
 **Case study on the antibiotic resistome**
 
@@ -156,6 +156,8 @@ During your analysis you notice something strange – even though the isolate C 
 
 First, let’s rule out a simple mistake – perhaps your collaborator got the files mixed up and they’ve given you the protein sequences from the wrong organism. Let’s check some of the proteins from the isolate to confirm that it is what we think it is.
 
+### Exercise 3
+
 Take the first few proteins in the file:
 `head -n 10 C_genome.fna`
 
@@ -190,11 +192,27 @@ Again, we are using the annotate.py to contextualize the results:
 ./annotate.py ./results/C_plasmid_CARD_results.txt CARD_metadata.tsv ./results/C_plasmid_CARD_summary.tsv
 ```
 
-### Exercise 3
+### Exercise 4
 
-1.	What ARGs are present on the plasmids, and what’s the taxonomy associated with the reference sequence that they most closely match?
-2.	Why are there inconsistencies between the taxonomy of the isolate and the ARGs found on the plasmids?
-3.	If you had metagenomic data in addition to these isolates, how would you make use of both datasets? What further analyses could be done to assist your collaborator in understanding where the antimicrobial resistance is coming from, and how they may recommend the farmer to approach treatment for the animals?
+1. What information did you find in the plasmids of these organisms?
+
+*model answer*
+
+A: The plasmid of A contains broadly similar categories of antimicrobial resistance to its genome. Therefore, A is likely a potent multi-drug resistane bacteria that has potential to transfer its resistance to other organisms.
+B: The plasmid of B contains minimal antimicrobial resistance , still, based on previous finding, B A is likely a multi-drug resistane bacteria.
+C: Surprisingly, carbapenem resistance has been identified in the plasmid of C, which likely suggests that its resistance to carbapenem as reported by our collaborator is due to horitontally acquired carbapenem resistance gene.
+
+2. What ARGs are present on the plasmids, and what’s the taxonomy associated with the reference sequence that they most closely match?
+
+*model answer*
+
+3. Why are there inconsistencies between the taxonomy of the isolate and the ARGs found on the plasmids?
+
+*model answer*
+
+4. If you had metagenomic data in addition to these isolates, how would you make use of both datasets? What further analyses could be done to assist your collaborator in understanding where the antimicrobial resistance is coming from, and how they may recommend the farmer to approach treatment for the animals?
+
+*model answer*
 
 # Glossary
 
