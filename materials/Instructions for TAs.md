@@ -129,7 +129,7 @@ Many ARGs seem to be identified, but how to further interpret the data?
 
 We have a helper tool: `annotate.py`, which uses the CARD Short Name from blast output (such as `A_genome_results.tsv`) to query the `CARD_metadata.tsv`, to obtain information such as Drug Class and Resistance Mechanism, summarised in such as `A_genome_summary.tsv`
 
-![alt](https://github.com/ganiatgithub/GNA5031_applied12/blob/main/materials/annotate.png)
+![alt](https://github.com/ganiatgithub/GNA5031_applied12/blob/main/materials/graphics/annotate.png)
 
 To run this script:
 
