@@ -1,4 +1,4 @@
-# GNA5031 Applied Session 12 - Stutents' copy
+# GNA5031 Applied Session 12 - Students' copy
 
 **Case study on the antibiotic resistome**
 
@@ -19,10 +19,10 @@ The antibiotic resistome refers to the collection of all antimicrobial resistanc
 
 In this case scenario, a collaborator has been studying antimicrobial resistant bacteria in agricultural runoff from a dairy farm. Recent infections in the cows have not resolved despite the farmer’s use of antibiotics, and there is concern that the farm’s runoff may be a hotspot for antimicrobial resistance that may be entering nearby waterways.
 
-Using a range of antibiotic selection agar plates to culture bacteria from the runoff, your collaborator has isolated a number of bacterial strains that grow in the presence of antibiotics, specially **carbapenem**. Three of these isolates exhibited high levels of resistance and your collaborator wishes to investigate them further. They have done some initial analyses and provided you with three files for each isolate:
+Using a range of antibiotic selection agar plates to culture bacteria from the runoff, your collaborator has isolated a number of bacterial strains that grow in the presence of antibiotics: specifically, they have isolated these strains on agar plates containing imipenem, an antibiotic belonging to the class **carbapenems**. Three of these isolates exhibited high levels of resistance and your collaborator wishes to investigate them further. They have done some initial analyses and provided you with three files for each isolate:
 
 1.	They initially conducted 16S rRNA sequencing of each isolate they found, to taxonomically identify them. They have provided you with the 16S rRNA sequence for each of the three concerning isolates in nucleotide format. `_16S.fna`
-2.	They have sequenced the genomes of these isolates and have provided you with the set of predicted protein sequences from each genome. `_genome.fna`
+2.	They have sequenced the genomes of these isolates and have provided you with the set of annotated genes from each genome. `_genome.fna`
 3.	To examine plasmid-borne resistance, they have isolated and purified plasmids from these isolates, and provided their sequences in nucleotide format. `_plasmid.fna`
 
 In this workshop you will analyse this data to identify the ARGs in these isolates that are likely to confer their resistance phenotypes, and consider the implications of this resistance, so that you may provide direction to your collaborator.
@@ -49,7 +49,10 @@ conda install -c bioconda diamond
 diamond help # test if diamond has been installed
 
 conda install -c bioconda seqkit
-seqkit -v # test if seqkit has been instaled
+seqkit -v # test if seqkit has been installed
+
+conda install pandas
+pip list | grep pandas # Check pandas is installed
 
 git clone https://github.com/ganiatgithub/GNA5031_applied12.git # obtain all information needed for this session.
 ```
@@ -68,7 +71,7 @@ Head to NCBI [BLASTn](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PROGRAM=blastn&BL
 Examine the results. 
 
 ### Exercise 1
-1.	How many gene sequences are there in this genome genome, and how many gene sequences are their in this plasmid?
+1.	How many gene sequences are there in each genome, and how many gene sequences are their plasmids?
 
 2.	What is the taxonomic identity of each of your isolates based on their 16S rRNA gene sequence? How similar is it to known reference strains?
 
@@ -80,7 +83,7 @@ A copy of the Comprehensive Antibiotic Resistance Database [(CARD)](https://card
 diamond makedb --in CARD.faa -d CARD.dmnd
 ```
 
-Then, we can run DIAMOND using the new CARD file as a database. We are using the blastp function from DIAMOND, because we are comparing a protein query (the proteins from the isolate) with a protein database (CARD). So we don’t have to run it three times, we’ll run it in a loop on all three isolate files:
+Then, we can run DIAMOND using the new CARD file as a database. We are using the blastx function from DIAMOND, because we are comparing a nucleotide query (the genes from the isolate) with a protein database (CARD). The blastx command does this by translating the DNA sequence to a protein sequence in all 6 open reading frames, and aligns them to the protein database. To avoid running it three times, we’ll run it in a loop on all three isolate files:
 ```
 for isolate in *_genome.fna
 do
@@ -102,14 +105,14 @@ Then, the diamond blastp command takes our new CARD.dmnd database and our isolat
 - --outfmt 6: DIAMOND has several options for its output, this is a tabular format. See Glossary for details.
 - --max-target-seqs 1: DIAMOND will output only one best hit when a protein matches something in the database
 - --max-hsps-1: DIAMOND will output only one best ‘high scoring pair’ per alignment. This prevents matches appearing twice if the query protein happens to align equally well in more than one place on the same database protein.
-- --id 70: This controls the minimum percentage identity between the query and database proteins. For proteins, 70% is considered a strict match to allow ARGs less similar to the reference sequences to be picked up.
+- --id 70: This controls the minimum percentage identity between the query and database proteins. For proteins, 70% is considered a strict match to allow ARGs less similar to the reference sequences to be picked up, but not many proteins that are too distant from these ARGs.
 
 The loop is closed with done, and you should have one DIAMOND results file for each isolate, named appropriately.
 Have a look at each of these files with `cat A_genome_CARD_results.txt`. What information do you find useful?
 
-Many ARGs seems to be identified, but how to further interpret the data?
+Many ARGs seem to be identified, but how to further interpret the data?
 
-We have a helper tool: `annotate.py`, which uses the CARD Short Name from blast output (such as `A_genome_results.tsv`) to query the `CARD_metadata.tsv`, to obatin information such as Drug Class and Resistance Mechanism, summarised in such as `A_genome_summary.tsv`
+We have a helper tool: `annotate.py`, which uses the CARD Short Name from blast output (such as `A_genome_results.tsv`) to query the `CARD_metadata.tsv`, to obtain information such as Drug Class and Resistance Mechanism, summarised in such as `A_genome_summary.tsv`
 
 ![alt](https://github.com/ganiatgithub/GNA5031_applied12/blob/main/materials/annotate.png)
 
@@ -124,24 +127,24 @@ To run this script:
 ### Exercise 2
 1.	How many ARGs have been identified in each genome, and how similar are they to known reference ARG sequences?
 
-2.	Summarise the ARGs for each isolate and the class of antibiotics they confer resistance to. Which antibiotics would you recommend your collaborator use to continue the culture of these isolates?
+2.	Summarise the ARGs for each isolate and the class of antibiotics they confer resistance to.
 
-3.	Based on your results, what is clear about the antimicrobial resistance in these three isolates. Is there anything unclear?
+3.	Based on your results, does this information match the information you received from your collaborator? Is anything unclear?
  
 ## Part 2: Identifying plasmid-borne ARGs and making recommendations
-During your analysis you notice something strange – even though the isolate C came from antibiotic selection, it doesn’t seem to contain any ARGs. What’s going on? Let’s do some forensic bioinformatics.
+During your analysis you notice something strange – even though the isolate C came from antibiotic selection on imipenem, it doesn’t seem to contain any ARGs corresponding to carbapenem resistance. What’s going on? Let’s do some forensic bioinformatics.
 
-First, let’s rule out a simple mistake – perhaps your collaborator got the files mixed up and they’ve given you the protein sequences from the wrong organism. Let’s check some of the proteins from the isolate to confirm that it is what we think it is.
+First, let’s rule out a simple mistake – perhaps your collaborator got the files mixed up and they’ve given you the gene sequences from the wrong organism. Let’s check some of the genes from the isolate to confirm that it is what we think it is.
 
 ### Exercise 3
 
 Take the first few proteins in the file:
 `head -n 10 C_genome.fna`
 
-Copy these and check them in [NCBI BLASTn](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PROGRAM=blastn&BLAST_SPEC=GeoBlast&PAGE_TYPE=BlastSearch). This time, use Protein BLAST and leave all of the settings at their default.
+Copy these and check them in [NCBI BLASTn](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PROGRAM=blastn&BLAST_SPEC=GeoBlast&PAGE_TYPE=BlastSearch). This time, leave all of the settings at their default.
 
 It’s likely that the resistant phenotype in this isolate comes from an ARG on the plasmid. Let’s check all the plasmids for ARGs.
-Using the CARD database we made, let’s query it with the plasmid sequences the collaborator provided. These are nucleotide sequences (you can see this when you check the file with head), so this time we use the blastx command, which takes a DNA sequence, translates to a protein sequence in all 6 open reading frames, and aligns them to the protein database.
+Using the CARD database we made, let’s query it with the plasmid sequences the collaborator provided. These are nucleotide sequences (you can see this when you check the file with head), so again we use the blastx command.
 
 ```
 for isolate in *_plasmid.fna
@@ -154,7 +157,7 @@ do
     fi
 done
 ```
-This command works exactly the same as the blastp command before.
+This command works exactly the same as the blastx command before.
 Use less to view the results for each plasmid.
 Again, we are using the annotate.py to contextualize the results:
 
@@ -168,11 +171,9 @@ Again, we are using the annotate.py to contextualize the results:
 
 1. What information did you find in the plasmids of these organisms?
 
-2. What ARGs are present on the plasmids, and what’s the taxonomy associated with the reference sequence that they most closely match?
+2. Let's look more closely at the few ARGs from the plasmid of isolate C, with `cat C_plasmid_card_results.txt`. What is the taxonomy associated with the CARD database hit for the ARGs in these plasmids? (Hint: search for the ID or name in the CARD.faa file.) Is this the organism you expected? Is that the case for all plasmids?
 
-3. Why are there inconsistencies between the taxonomy of the isolate and the ARGs found on the plasmids?
-
-4. If you had metagenomic data in addition to these isolates, how would you make use of both datasets? What further analyses could be done to assist your collaborator in understanding where the antimicrobial resistance is coming from, and how they may recommend the farmer to approach treatment for the animals?
+3. If you had metagenomic data in addition to these isolates, how would you make use of both datasets? What further analyses could be done to assist your collaborator in understanding where the antimicrobial resistance is coming from, and how they may recommend the farmer to approach treatment for the animals?
 
 # Glossary
 

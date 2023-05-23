@@ -251,6 +251,3 @@ Carbapenems, among the beta-lactams, are the most effective against Gram-positiv
 
 ## Tetracycline
 Tetracycline antibiotics are well known for their broad spectrum of activity, spanning a wide range of Gram-positive and -negative bacteria, spirochetes, obligate intracellular bacteria, as well as protozoan parasites. Several of tetracyclines remain in clinical use for the treatment of uncomplicated respiratory, urogenital, gastrointestinal, and other rare and serious infections; however, the dissemination of tetracycline-resistant mechanisms has narrowed their utility, limiting use to only infections with confirmed susceptibility. [Grossman 2016](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4817740/)
-
-# Misc
-[where to look for plasmids and genomes](https://www.ncbi.nlm.nih.gov/genome/browse#!/prokaryotes/Pseudomonas%20aeruginosa)
