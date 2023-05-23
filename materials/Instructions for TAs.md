@@ -19,10 +19,10 @@ The antibiotic resistome refers to the collection of all antimicrobial resistanc
 
 In this case scenario, a collaborator has been studying antimicrobial resistant bacteria in agricultural runoff from a dairy farm. Recent infections in the cows have not resolved despite the farmer’s use of antibiotics, and there is concern that the farm’s runoff may be a hotspot for antimicrobial resistance that may be entering nearby waterways.
 
-Using a range of antibiotic selection agar plates to culture bacteria from the runoff, your collaborator has isolated a number of bacterial strains that grow in the presence of antibiotics, specially **carbapenem**. Three of these isolates exhibited high levels of resistance and your collaborator wishes to investigate them further. They have done some initial analyses and provided you with three files for each isolate:
+Using a range of antibiotic selection agar plates to culture bacteria from the runoff, your collaborator has isolated a number of bacterial strains that grow in the presence of antibiotics: specifically, they have isolated these strains on agar plates containing imipenem, an antibiotic belonging to the class **carbapenems**. Three of these isolates exhibited high levels of resistance and your collaborator wishes to investigate them further. They have done some initial analyses and provided you with three files for each isolate:
 
 1.	They initially conducted 16S rRNA sequencing of each isolate they found, to taxonomically identify them. They have provided you with the 16S rRNA sequence for each of the three concerning isolates in nucleotide format. `_16S.fna`
-2.	They have sequenced the genomes of these isolates and have provided you with the set of predicted protein sequences from each genome. `_genome.fna`
+2.	They have sequenced the genomes of these isolates and have provided you with the set of annotated genes from each genome. `_genome.fna`
 3.	To examine plasmid-borne resistance, they have isolated and purified plasmids from these isolates, and provided their sequences in nucleotide format. `_plasmid.fna`
 
 In this workshop you will analyse this data to identify the ARGs in these isolates that are likely to confer their resistance phenotypes, and consider the implications of this resistance, so that you may provide direction to your collaborator.
@@ -49,7 +49,10 @@ conda install -c bioconda diamond
 diamond help # test if diamond has been installed
 
 conda install -c bioconda seqkit
-seqkit -v # test if seqkit has been instaled
+seqkit -v # test if seqkit has been installed
+
+conda install pandas
+pip list | grep pandas # Check pandas is installed
 
 git clone https://github.com/ganiatgithub/GNA5031_applied12.git # obtain all information needed for this session.
 ```
@@ -68,15 +71,24 @@ Head to NCBI [BLASTn](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PROGRAM=blastn&BL
 Examine the results. 
 
 ### Exercise 1
-1.	How many gene sequences are there in this genome genome, and how many gene sequences are their in this plasmid?
-- A: 6522
-- B: 5779
-- C: 2911
+1.	How many gene sequences are there in each genome, and how many gene sequences are their plasmids?
+
+*model answer*
+
+- A genome: 6522
+- B genome: 5779
+- C genome: 2911
+
+A_plasmid has 539
+B_plasmid has 141
+C_plasmid has 5
 
 2.	What is the taxonomic identity of each of your isolates based on their 16S rRNA gene sequence? How similar is it to known reference strains?
-- A: Pseudomonas aeruginosa HS18-89
-- B: Klebsiella pneumoniae HS11286
-- C: Staphylococcus aureus Gv51
+
+*model answer*
+Genome A is Pseudomonas aerugonosa, 98 - 100% identical to reference strains (Pseudomonas aeruginosa HS18-89)
+Genome B is Klebsiella pneumoniae, 98-99% identical to reference strains (Klebsiella pneumoniae HS11286)
+Genome C is a Staphylococcus species, it's similar to several strains of aureus, but there's other hits with very similar sequences too. (Staphylococcus aureus Gv51)
 
 Now we know what species these isolates are, we want to search their genes to determine if any of them are ARGs. For this we use DIAMOND, a sequence alignment tool which works similarly to BLAST but runs faster when searching a lot of sequences.
 
@@ -86,7 +98,7 @@ A copy of the Comprehensive Antibiotic Resistance Database [(CARD)](https://card
 diamond makedb --in CARD.faa -d CARD.dmnd
 ```
 
-Then, we can run DIAMOND using the new CARD file as a database. We are using the blastp function from DIAMOND, because we are comparing a protein query (the proteins from the isolate) with a protein database (CARD). So we don’t have to run it three times, we’ll run it in a loop on all three isolate files:
+Then, we can run DIAMOND using the new CARD file as a database. We are using the blastx function from DIAMOND, because we are comparing a nucleotide query (the genes from the isolate) with a protein database (CARD). The blastx command does this by translating the DNA sequence to a protein sequence in all 6 open reading frames, and aligns them to the protein database. To avoid running it three times, we’ll run it in a loop on all three isolate files:
 ```
 for isolate in *_genome.fna
 do
@@ -108,14 +120,14 @@ Then, the diamond blastp command takes our new CARD.dmnd database and our isolat
 - --outfmt 6: DIAMOND has several options for its output, this is a tabular format. See Glossary for details.
 - --max-target-seqs 1: DIAMOND will output only one best hit when a protein matches something in the database
 - --max-hsps-1: DIAMOND will output only one best ‘high scoring pair’ per alignment. This prevents matches appearing twice if the query protein happens to align equally well in more than one place on the same database protein.
-- --id 70: This controls the minimum percentage identity between the query and database proteins. For proteins, 70% is considered a strict match to allow ARGs less similar to the reference sequences to be picked up.
+- --id 70: This controls the minimum percentage identity between the query and database proteins. For proteins, 70% is considered a strict match to allow ARGs less similar to the reference sequences to be picked up, but not many proteins that are too distant from these ARGs.
 
 The loop is closed with done, and you should have one DIAMOND results file for each isolate, named appropriately.
 Have a look at each of these files with `cat A_genome_CARD_results.txt`. What information do you find useful?
 
-Many ARGs seems to be identified, but how to further interpret the data?
+Many ARGs seem to be identified, but how to further interpret the data?
 
-We have a helper tool: `annotate.py`, which uses the CARD Short Name from blast output (such as `A_genome_results.tsv`) to query the `CARD_metadata.tsv`, to obatin information such as Drug Class and Resistance Mechanism, summarised in such as `A_genome_summary.tsv`
+We have a helper tool: `annotate.py`, which uses the CARD Short Name from blast output (such as `A_genome_results.tsv`) to query the `CARD_metadata.tsv`, to obtain information such as Drug Class and Resistance Mechanism, summarised in such as `A_genome_summary.tsv`
 
 ![alt](https://github.com/ganiatgithub/GNA5031_applied12/blob/main/materials/annotate.png)
 
@@ -136,40 +148,41 @@ To run this script:
 - B: 62 ARGs, all above 70% threshold cut off, some are 100% identicial to what has been curated in CARD.
 - C: 28 ARGs, all above 70% threshold cut off, some are 100% identicial to what has been curated in CARD.
 
-2.	Summarise the ARGs for each isolate and the class of antibiotics they confer resistance to. Which antibiotics would you recommend your collaborator use to continue the culture of these isolates?
+2.	Summarise the ARGs for each isolate and the class of antibiotics they confer resistance to.
 
 *model answer*
 
 - A: disinfecting agents, aminocoumarin, **carbapenem**, diaminopyrimidine, monobactam, tetracycline
 - B: disinfecting agents, aminocoumarin, **carbapenem**, peptide antibiotic, fluoroquinolone
 - C: disinfecting agents, aminoglycoside antibiotic, glycylcycline;tetracycline antibiotic
+Note that disinfecting agents are not a class of antibiotic, but the presence of efflux pumps can make bacteria more resilient to disinfection as well as antibiotics and other drugs.
 
-3.	Based on your results, what is clear about the antimicrobial resistance in these three isolates. Is there anything unclear?
+3.	Based on your results, does this information match the information you received from your collaborator? Is anything unclear?
 
 *model answer*
 
-All three isolates contains resistance to multiple antimicrobial mechanisms. Especially, both A and B are shown to resist to carbapenem, which coinsides with what our collaborator has reported.
-However, it is unclear why C is shown to resist to carbapenem, but there is no genes related to carbapenem resistance in it's genome.
+All three isolates contain resistance to multiple antimicrobial mechanisms. Isolates A and B both appear to be resistant to carbapenems, which coincides with what our collaborator has reported (that they isolated them on imipenem plates).
+However, while isolate C also grew on imipenem and has therefore demonstrated resistance to it, it has no genes related to carbapenem resistance in its genome.
  
 ## Part 2: Identifying plasmid-borne ARGs and making recommendations
-During your analysis you notice something strange – even though the isolate C came from antibiotic selection, it doesn’t seem to contain any ARGs. What’s going on? Let’s do some forensic bioinformatics.
+During your analysis you notice something strange – even though the isolate C came from antibiotic selection on imipenem, it doesn’t seem to contain any ARGs corresponding to carbapenem resistance. What’s going on? Let’s do some forensic bioinformatics.
 
-First, let’s rule out a simple mistake – perhaps your collaborator got the files mixed up and they’ve given you the protein sequences from the wrong organism. Let’s check some of the proteins from the isolate to confirm that it is what we think it is.
+First, let’s rule out a simple mistake – perhaps your collaborator got the files mixed up and they’ve given you the gene sequences from the wrong organism. Let’s check some of the genes from the isolate to confirm that it is what we think it is.
 
 ### Exercise 3
 
 Take the first few proteins in the file:
 `head -n 10 C_genome.fna`
 
-Copy these and check them in [NCBI BLASTn](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PROGRAM=blastn&BLAST_SPEC=GeoBlast&PAGE_TYPE=BlastSearch). This time, use Protein BLAST and leave all of the settings at their default.
+Copy these and check them in [NCBI BLASTn](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PROGRAM=blastn&BLAST_SPEC=GeoBlast&PAGE_TYPE=BlastSearch). This time, leave all of the settings at their default.
 
 *model answer*
 
 The closest match correspond with the 16S rRNA sequence file that identifies this isolate as Staphylococcus aureus.
-Therefore, there shouldn't be a mixed up.
+Therefore, there shouldn't be a mix up.
 
 It’s likely that the resistant phenotype in this isolate comes from an ARG on the plasmid. Let’s check all the plasmids for ARGs.
-Using the CARD database we made, let’s query it with the plasmid sequences the collaborator provided. These are nucleotide sequences (you can see this when you check the file with head), so this time we use the blastx command, which takes a DNA sequence, translates to a protein sequence in all 6 open reading frames, and aligns them to the protein database.
+Using the CARD database we made, let’s query it with the plasmid sequences the collaborator provided. These are nucleotide sequences (you can see this when you check the file with head), so again we use the blastx command.
 
 ```
 for isolate in *_plasmid.fna
@@ -182,7 +195,7 @@ do
     fi
 done
 ```
-This command works exactly the same as the blastp command before.
+This command works exactly the same as the blastx command before.
 Use less to view the results for each plasmid.
 Again, we are using the annotate.py to contextualize the results:
 
@@ -198,21 +211,19 @@ Again, we are using the annotate.py to contextualize the results:
 
 *model answer*
 
-A: The plasmid of A contains broadly similar categories of antimicrobial resistance to its genome. Therefore, A is likely a potent multi-drug resistane bacteria that has potential to transfer its resistance to other organisms.
-B: The plasmid of B contains minimal antimicrobial resistance , still, based on previous finding, B A is likely a multi-drug resistane bacteria.
-C: Surprisingly, carbapenem resistance has been identified in the plasmid of C, which likely suggests that its resistance to carbapenem as reported by our collaborator is due to horitontally acquired carbapenem resistance gene.
+A: The plasmid of A contains broadly similar categories of antimicrobial resistance to its genome. Therefore, A is likely a potent multi-drug resistant bacterium that has potential to transfer its resistance to other organisms.
+B: The plasmid of B contains minimal antimicrobial resistance, so has less capacity to transfer this to other organisms, but its genome indicates it is still a multi-drug resistant organism and would be problematic if this is pathogenic.
+C: Carbapenem resistance genes have been identified in the plasmid of C, which likely suggests that its resistance to carbapenem as reported by our collaborator is due to horizontally acquired carbapenem resistance gene.
 
-2. What ARGs are present on the plasmids, and what’s the taxonomy associated with the reference sequence that they most closely match?
-
-*model answer*
-
-3. Why are there inconsistencies between the taxonomy of the isolate and the ARGs found on the plasmids?
+2. Let's look more closely at the few ARGs from the plasmid of isolate C, with `cat C_plasmid_card_results.txt`. What is the taxonomy associated with the CARD database hit for the ARGs in these plasmids? (Hint: search for the ID or name in the CARD.faa file.) Is this the organism you expected? Is that the case for all plasmids?
 
 *model answer*
+Three of the four belong to *Staphylococcus aureus*. One of them most closely matches something else entirely (Limosilactobacillus reuteri) so this could indicate some transfer of genes, or a homologous gene that is more divergent from known Staph aureus resistance genes. If the students check some genes from other plasmids, sometimes the gene belongs to the same species as the isolate they have - sometimes not. This is generally indicative of horizontal gene transfer, similar genes carried by different organisms, or the 'best match' being a different organism because the gene in their isolate is more novel or distant from other known genes in that species.
 
-4. If you had metagenomic data in addition to these isolates, how would you make use of both datasets? What further analyses could be done to assist your collaborator in understanding where the antimicrobial resistance is coming from, and how they may recommend the farmer to approach treatment for the animals?
+3. If you had metagenomic data in addition to these isolates, how would you make use of both datasets? What further analyses could be done to assist your collaborator in understanding where the antimicrobial resistance is coming from, and how they may recommend the farmer to approach treatment for the animals?
 
 *model answer*
+Many answers would be acceptable here. Metagenomics can help us understand the full resistome in that environment (i.e. not just organisms that were culturable by our collaborator) and this information could help to streamline or target further surveillance for the most critical pathogens and AMR. Genomic information from the cows with antibiotic-resistant infection will help to determine what is causing their infections, and assessment of those ARGs followed by laboratory confirmation of resistance and susceptibility phenotypes will guide the usage of antibiotics at the farm. With metagenomes and isolate genomes, including plasmid sequences, you could determine which ARGs are at risk of being horizontally transmitted. It is concerning that multiple organisms with multi-drug resistance are present in the agricultural runoff from this farm, as it could enter waterways, infect people who work at or visit the farm, or be transmitted via dairy products from the farm - interventions are likely needed to curb transmission along several different pathways.
 
 # Glossary
 
