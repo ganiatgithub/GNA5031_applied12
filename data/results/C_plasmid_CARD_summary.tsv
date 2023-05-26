@@ -1,0 +1,5 @@
+qseqid	Drug Class	Resistance Mechanism
+lcl|NZ_CP012016.1_cds_SAGV51_RS15425_2	phenicol antibiotic	antibiotic inactivation
+lcl|CP012015.1_cds_ALY24723.1_67	carbapenem;cephalosporin;cephamycin;monobactam;penam	antibiotic target replacement
+lcl|CP012015.1_cds_ALY26936.1_68	carbapenem;cephalosporin;cephamycin;monobactam;penam	antibiotic target replacement
+lcl|CP012015.1_cds_ALY24724.1_69	carbapenem;cephalosporin;cephamycin;monobactam;penam	antibiotic target replacement

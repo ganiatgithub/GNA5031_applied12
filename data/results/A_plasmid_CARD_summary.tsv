@@ -1,0 +1,31 @@
+qseqid	Drug Class	Resistance Mechanism
+lcl|CP084322.1_cds_WDM10050.1_216	aminocoumarin antibiotic;aminoglycoside antibiotic;cephalosporin;diaminopyrimidine antibiotic;fluoroquinolone antibiotic;macrolide antibiotic;penam;phenicol antibiotic;tetracycline antibiotic	antibiotic efflux
+lcl|CP084322.1_cds_WDM10051.1_217	aminocoumarin antibiotic;aminoglycoside antibiotic;cephalosporin;diaminopyrimidine antibiotic;fluoroquinolone antibiotic;macrolide antibiotic;penam;phenicol antibiotic;tetracycline antibiotic	antibiotic efflux
+lcl|CP084322.1_cds_LEL82_34115_221	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP084322.1_cds_LEL82_34365_271	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP084322.1_cds_WDM09590.1_286	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP084322.1_cds_WDM10055.1_222	fluoroquinolone antibiotic	antibiotic target protection
+lcl|CP084322.1_cds_WDM10057.1_224	rifamycin antibiotic	antibiotic inactivation
+lcl|CP084322.1_cds_WDM09587.1_282	rifamycin antibiotic	antibiotic inactivation
+lcl|CP084322.1_cds_WDM10058.1_225	diaminopyrimidine antibiotic	antibiotic target replacement
+lcl|CP084322.1_cds_WDM10059.1_226	disinfecting agents and antiseptics	antibiotic efflux
+lcl|CP084322.1_cds_WDM09575.1_264	disinfecting agents and antiseptics	antibiotic efflux
+lcl|CP084322.1_cds_WDM09585.1_280	disinfecting agents and antiseptics	antibiotic efflux
+lcl|CP084322.1_cds_WDM09547.1_227	sulfonamide antibiotic;sulfone antibiotic	antibiotic target replacement
+lcl|CP084322.1_cds_WDM09574.1_263	sulfonamide antibiotic;sulfone antibiotic	antibiotic target replacement
+lcl|CP084322.1_cds_WDM09584.1_279	sulfonamide antibiotic;sulfone antibiotic	antibiotic target replacement
+lcl|CP084322.1_cds_WDM09568.1_254	macrolide antibiotic	antibiotic inactivation
+lcl|CP084322.1_cds_WDM09569.1_255	macrolide antibiotic;streptogramin antibiotic	antibiotic target protection
+lcl|CP084322.1_cds_WDM09571.1_259	aminoglycoside antibiotic	antibiotic target alteration
+lcl|CP084322.1_cds_LEL82_34335_265	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP084322.1_cds_LEL82_34345_267	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP084322.1_cds_WDM09577.1_268	phenicol antibiotic	antibiotic efflux
+lcl|CP084322.1_cds_WDM09578.1_269	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP084322.1_cds_WDM09579.1_270	aminoglycoside antibiotic	antibiotic inactivation
+lcl|CP084322.1_cds_WDM09581.1_273	glycopeptide antibiotic	antibiotic inactivation
+lcl|CP084322.1_cds_WDM09582.1_274	carbapenem	antibiotic inactivation
+lcl|CP084322.1_cds_LEL82_34385_275	phenicol antibiotic	antibiotic efflux
+lcl|CP084322.1_cds_WDM09586.1_281	diaminopyrimidine antibiotic	antibiotic target replacement
+lcl|CP084322.1_cds_WDM10064.1_283	carbapenem;cephalosporin;penam	antibiotic inactivation
+lcl|CP084322.1_cds_WDM09588.1_284	phenicol antibiotic	antibiotic efflux
+lcl|CP084322.1_cds_WDM09589.1_285	aminoglycoside antibiotic	antibiotic inactivation
