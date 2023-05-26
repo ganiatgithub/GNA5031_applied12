@@ -1,0 +1,207 @@
+<h1>GNA5031 Applied Session 12 - TA's copy</h1>
+<p><strong>Case study on the antibiotic resistome</strong></p>
+<h2>Learning Objectives:</h2>
+<p>At the conclusion of this session, students should be able to:</p>
+<ul>
+<li>Examine different genomic sequence files and understand their content</li>
+<li>Query an antimicrobial resistance gene (ARG) database to identify likely ARGs within genomes and plasmids</li>
+<li>Use BLAST to identify an organism by its 16S rRNA genome sequence</li>
+<li>Explain the benefits and implications of searching chromosomes compared to plasmids for ARGs</li>
+</ul>
+<p>Software required: <code>DIAMOND</code>, <code>seqkit</code>, text editing software (<code>BBedit</code> for Mac, <code>Notepad++</code> for PC), <code>Microsoft excel</code></p>
+<h2>Introduction</h2>
+<p>The antibiotic resistome refers to the collection of all antimicrobial resistance genes (ARGs) in both pathogenic and non-pathogenic bacteria. To understand the resistome of a particular environment or setting, metagenomic sequencing can be used to examine the genomes of all microbial community members and profile the ARGs they contain. However, depending on the depth of sequencing and the success of metagenome assembly efforts, with this approach it may be challenging to link ARGs with the organisms that have them, to verify whether the presence of such genes corresponds to an antibiotic resistance phenotype, and to understand transmission dynamics.</p>
+<p>In this case scenario, a collaborator has been studying antimicrobial resistant bacteria in agricultural runoff from a dairy farm. Recent infections in the cows have not resolved despite the farmer’s use of antibiotics, and there is concern that the farm’s runoff may be a hotspot for antimicrobial resistance that may be entering nearby waterways.</p>
+<p>Using a range of antibiotic selection agar plates to culture bacteria from the runoff, your collaborator has isolated a number of bacterial strains that grow in the presence of antibiotics: specifically, they have isolated these strains on agar plates containing imipenem, an antibiotic belonging to the class <strong>carbapenems</strong>. Three of these isolates exhibited high levels of resistance and your collaborator wishes to investigate them further. They have done some initial analyses and provided you with three files for each isolate:</p>
+<ol>
+<li>They initially conducted 16S rRNA sequencing of each isolate they found, to taxonomically identify them. They have provided you with the 16S rRNA sequence for each of the three concerning isolates in nucleotide format. <code>_16S.fna</code></li>
+<li>They have sequenced the genomes of these isolates and have provided you with the set of annotated genes from each genome. <code>_genome.fna</code></li>
+<li>To examine plasmid-borne resistance, they have isolated and purified plasmids from these isolates, and provided their sequences in nucleotide format. <code>_plasmid.fna</code></li>
+</ol>
+<p>In this workshop you will analyse this data to identify the ARGs in these isolates that are likely to confer their resistance phenotypes, and consider the implications of this resistance, so that you may provide direction to your collaborator.</p>
+<h2>Part 1: Identify the isolates and search their genomes for ARGs</h2>
+<h3>Login to virtual machine</h3>
+<ul>
+<li><a href="https://docs.google.com/document/d/10xCfnzVv0f3GhByf5eI0TuRFphFmW9MwhVV2dWdaksE/edit#heading=h.hp02g0aoh97y">list of VMs</a></li>
+<li><a href="https://docs.google.com/document/d/1WBYDpS5utSvHylmRrgBNzXmZwQ74kTkv/edit">Instructions for VM login in detail (example from week 2)</a></li>
+</ul>
+<pre><code>ssh -x gnii0001@gna5031s1-gnii0001-01.rep.monash.edu # currently na
+# next type in your passwords
+</code></pre>
+<h3>Obtain data and software</h3>
+<p>Once logged in, use the following commands to obtain software and data.</p>
+<pre><code>conda activate gna5031
+
+conda install -c bioconda diamond
+
+diamond help # test if diamond has been installed
+
+conda install -c bioconda seqkit
+seqkit -v # test if seqkit has been installed
+
+conda install pandas
+pip list | grep pandas # Check pandas is installed
+
+git clone https://github.com/ganiatgithub/GNA5031_applied12.git # obtain all information needed for this session.
+</code></pre>
+<h3>Inpect data</h3>
+<p>Let’s start by checking the files you have been given. Use the following scripts and understand their contents.</p>
+<pre><code>cd data
+head A_genome.fna
+less A_genome.fna
+seqkit stats A_genome.fna
+</code></pre>
+<p>It would be helpful to know which organisms we’re dealing with, so let’s check those 16S rRNA sequences to identify what these organisms are.
+Head to NCBI <a href="https://blast.ncbi.nlm.nih.gov/Blast.cgi?PROGRAM=blastn&amp;BLAST_SPEC=GeoBlast&amp;PAGE_TYPE=BlastSearch">BLASTn</a>. Copy the sequence into the query box, and change the search to BLAST against rRNA/ITS databases – specifically 16S ribosomal RNA sequences. You can leave the rest of the options at the default settings, and run the search.
+Examine the results.</p>
+<h3>Exercise 1</h3>
+<ol>
+<li>How many gene sequences are there in each genome, and how many gene sequences are their plasmids?</li>
+</ol>
+<p><em>model answer</em></p>
+<ul>
+<li>A genome: 6522</li>
+<li>B genome: 5779</li>
+<li>C genome: 2911</li>
+</ul>
+<p>A_plasmid has 539
+B_plasmid has 141
+C_plasmid has 5</p>
+<ol start="2">
+<li>What is the taxonomic identity of each of your isolates based on their 16S rRNA gene sequence? How similar is it to known reference strains?</li>
+</ol>
+<p><em>model answer</em>
+Genome A is Pseudomonas aerugonosa, 98 - 100% identical to reference strains (Pseudomonas aeruginosa HS18-89)
+Genome B is Klebsiella pneumoniae, 98-99% identical to reference strains (Klebsiella pneumoniae HS11286)
+Genome C is a Staphylococcus species, it's similar to several strains of aureus, but there's other hits with very similar sequences too. (Staphylococcus aureus Gv51)</p>
+<p>Now we know what species these isolates are, we want to search their genes to determine if any of them are ARGs. For this we use DIAMOND, a sequence alignment tool which works similarly to BLAST but runs faster when searching a lot of sequences.</p>
+<p>A copy of the Comprehensive Antibiotic Resistance Database <a href="https://card.mcmaster.ca/">(CARD)</a> has been provided to you. CARD is a rigorously curated collection of known resistance determinants and associated antibiotics. To use it with DIAMOND, we need to make a DIAMOND database – a version of the database that can be recognised and searched by DIAMOND.</p>
+<pre><code>diamond makedb --in CARD.faa -d CARD.dmnd
+</code></pre>
+<p>Then, we can run DIAMOND using the new CARD file as a database. We are using the blastx function from DIAMOND, because we are comparing a nucleotide query (the genes from the isolate) with a protein database (CARD). The blastx command does this by translating the DNA sequence to a protein sequence in all 6 open reading frames, and aligns them to the protein database. To avoid running it three times, we’ll run it in a loop on all three isolate files:</p>
+<pre><code>for isolate in *_genome.fna
+do
+  if [ -s &quot;$isolate&quot; ]; then
+    echo &quot;Processing $isolate&quot;
+    name=&quot;$(basename -- &quot;$isolate&quot; | sed 's/_genome.fna//')&quot;
+    echo &quot;Name is $name&quot;
+    diamond blastx -d CARD.dmnd -q &quot;$isolate&quot; -o results/&quot;${name}_genome_CARD_results.txt&quot; --outfmt 6 --max-target-seqs 1 --max-hsps 1 --id 70
+    fi
+done
+</code></pre>
+<p><strong>What’s happening?</strong></p>
+<p>This command begins by running a loop on all three isolate files: for each one (which ends in .faa), do the following:</p>
+<p>What it does for each file is define the “name” variable, which is simply the sample name. The basename command strips any directory names that might come before the filename, then sed removes the .faa extension. This leaves us with the isolate name in the $name variable, which we use to name the output files.
+Then, the diamond blastp command takes our new CARD.dmnd database and our isolate proteins, and searches those proteins in the database. The --out flag allows us to name the output file (which uses the isolate name, coming from the $name variable we defined above). We add a few additional options to the end to control our output:</p>
+<ul>
+<li>--outfmt 6: DIAMOND has several options for its output, this is a tabular format. See Glossary for details.</li>
+<li>--max-target-seqs 1: DIAMOND will output only one best hit when a protein matches something in the database</li>
+<li>--max-hsps-1: DIAMOND will output only one best ‘high scoring pair’ per alignment. This prevents matches appearing twice if the query protein happens to align equally well in more than one place on the same database protein.</li>
+<li>--id 70: This controls the minimum percentage identity between the query and database proteins. For proteins, 70% is considered a strict match to allow ARGs less similar to the reference sequences to be picked up, but not many proteins that are too distant from these ARGs.</li>
+</ul>
+<p>The loop is closed with done, and you should have one DIAMOND results file for each isolate, named appropriately.
+Have a look at each of these files with <code>cat A_genome_CARD_results.txt</code>. What information do you find useful?</p>
+<p>Many ARGs seem to be identified, but how to further interpret the data?</p>
+<p>We have a helper tool: <code>annotate.py</code>, which uses the CARD Short Name from blast output (such as <code>A_genome_results.tsv</code>) to query the <code>CARD_metadata.tsv</code>, to obtain information such as Drug Class and Resistance Mechanism, summarised in such as <code>A_genome_summary.tsv</code></p>
+<p><img src="https://github.com/ganiatgithub/GNA5031_applied12/blob/main/materials/graphics/annotate.png" alt="alt"></p>
+<p>To run this script:</p>
+<pre><code>./annotate.py ./results/A_genome_CARD_results.txt CARD_metadata.tsv ./results/A_genome_CARD_summary.tsv
+./annotate.py ./results/B_genome_CARD_results.txt CARD_metadata.tsv ./results/B_genome_CARD_summary.tsv
+./annotate.py ./results/C_genome_CARD_results.txt CARD_metadata.tsv ./results/C_genome_CARD_summary.tsv
+</code></pre>
+<h3>Exercise 2</h3>
+<ol>
+<li>How many ARGs have been identified in each genome, and how similar are they to known reference ARG sequences?</li>
+</ol>
+<p><em>model answer</em></p>
+<ul>
+<li>A: 59 ARGs, all above 70% threshold cut off, some are 100% identicial to what has been curated in CARD.</li>
+<li>B: 62 ARGs, all above 70% threshold cut off, some are 100% identicial to what has been curated in CARD.</li>
+<li>C: 28 ARGs, all above 70% threshold cut off, some are 100% identicial to what has been curated in CARD.</li>
+</ul>
+<ol start="2">
+<li>Summarise the ARGs for each isolate and the class of antibiotics they confer resistance to.</li>
+</ol>
+<p><em>model answer</em></p>
+<ul>
+<li>A: disinfecting agents, aminocoumarin, <strong>carbapenem</strong>, diaminopyrimidine, monobactam, tetracycline</li>
+<li>B: disinfecting agents, aminocoumarin, <strong>carbapenem</strong>, peptide antibiotic, fluoroquinolone</li>
+<li>C: disinfecting agents, aminoglycoside antibiotic, glycylcycline;tetracycline antibiotic
+Note that disinfecting agents are not a class of antibiotic, but the presence of efflux pumps can make bacteria more resilient to disinfection as well as antibiotics and other drugs.</li>
+</ul>
+<ol start="3">
+<li>Based on your results, does this information match the information you received from your collaborator? Is anything unclear?</li>
+</ol>
+<p><em>model answer</em></p>
+<p>All three isolates contain resistance to multiple antimicrobial mechanisms. Isolates A and B both appear to be resistant to carbapenems, which coincides with what our collaborator has reported (that they isolated them on imipenem plates).
+However, while isolate C also grew on imipenem and has therefore demonstrated resistance to it, it has no genes related to carbapenem resistance in its genome.</p>
+<h2>Part 2: Identifying plasmid-borne ARGs and making recommendations</h2>
+<p>During your analysis you notice something strange – even though the isolate C came from antibiotic selection on imipenem, it doesn’t seem to contain any ARGs corresponding to carbapenem resistance. What’s going on? Let’s do some forensic bioinformatics.</p>
+<p>First, let’s rule out a simple mistake – perhaps your collaborator got the files mixed up and they’ve given you the gene sequences from the wrong organism. Let’s check some of the genes from the isolate to confirm that it is what we think it is.</p>
+<h3>Exercise 3</h3>
+<p>Take the first few proteins in the file:
+<code>head -n 10 C_genome.fna</code></p>
+<p>Copy these and check them in <a href="https://blast.ncbi.nlm.nih.gov/Blast.cgi?PROGRAM=blastn&amp;BLAST_SPEC=GeoBlast&amp;PAGE_TYPE=BlastSearch">NCBI BLASTn</a>. This time, leave all of the settings at their default.</p>
+<p><em>model answer</em></p>
+<p>The closest match correspond with the 16S rRNA sequence file that identifies this isolate as Staphylococcus aureus.
+Therefore, there shouldn't be a mix up.</p>
+<p>It’s likely that the resistant phenotype in this isolate comes from an ARG on the plasmid. Let’s check all the plasmids for ARGs.
+Using the CARD database we made, let’s query it with the plasmid sequences the collaborator provided. These are nucleotide sequences (you can see this when you check the file with head), so again we use the blastx command.</p>
+<pre><code>for isolate in *_plasmid.fna
+do
+  if [ -s &quot;$isolate&quot; ]; then
+    echo &quot;Processing $isolate&quot;
+    name=&quot;$(basename -- &quot;$isolate&quot; | sed 's/_plasmid.fna//')&quot;
+    echo &quot;Name is $name&quot;
+    diamond blastx -d CARD.dmnd -q &quot;$isolate&quot; -o results/&quot;${name}_plasmid_CARD_results.txt&quot; --outfmt 6 --max-target-seqs 1 --max-hsps 1 --id 70
+    fi
+done
+</code></pre>
+<p>This command works exactly the same as the blastx command before.
+Use less to view the results for each plasmid.
+Again, we are using the annotate.py to contextualize the results:</p>
+<pre><code>./annotate.py ./results/A_plasmid_CARD_results.txt CARD_metadata.tsv ./results/A_plasmid_CARD_summary.tsv
+./annotate.py ./results/B_plasmid_CARD_results.txt CARD_metadata.tsv ./results/B_plasmid_CARD_summary.tsv
+./annotate.py ./results/C_plasmid_CARD_results.txt CARD_metadata.tsv ./results/C_plasmid_CARD_summary.tsv
+</code></pre>
+<h3>Exercise 4</h3>
+<ol>
+<li>What information did you find in the plasmids of these organisms?</li>
+</ol>
+<p><em>model answer</em></p>
+<p>A: The plasmid of A contains broadly similar categories of antimicrobial resistance to its genome. Therefore, A is likely a potent multi-drug resistant bacterium that has potential to transfer its resistance to other organisms.
+B: The plasmid of B contains minimal antimicrobial resistance, so has less capacity to transfer this to other organisms, but its genome indicates it is still a multi-drug resistant organism and would be problematic if this is pathogenic.
+C: Carbapenem resistance genes have been identified in the plasmid of C, which likely suggests that its resistance to carbapenem as reported by our collaborator is due to horizontally acquired carbapenem resistance gene.</p>
+<ol start="2">
+<li>Let's look more closely at the few ARGs from the plasmid of isolate C, with <code>cat C_plasmid_card_results.txt</code>. What is the taxonomy associated with the CARD database hit for the ARGs in these plasmids? (Hint: search for the ID or name in the CARD.faa file.) Is this the organism you expected? Is that the case for all plasmids?</li>
+</ol>
+<p><em>model answer</em>
+Three of the four belong to <em>Staphylococcus aureus</em>. One of them most closely matches something else entirely (Limosilactobacillus reuteri) so this could indicate some transfer of genes, or a homologous gene that is more divergent from known Staph aureus resistance genes. If the students check some genes from other plasmids, sometimes the gene belongs to the same species as the isolate they have - sometimes not. This is generally indicative of horizontal gene transfer, similar genes carried by different organisms, or the 'best match' being a different organism because the gene in their isolate is more novel or distant from other known genes in that species.</p>
+<ol start="3">
+<li>If you had metagenomic data in addition to these isolates, how would you make use of both datasets? What further analyses could be done to assist your collaborator in understanding where the antimicrobial resistance is coming from, and how they may recommend the farmer to approach treatment for the animals?</li>
+</ol>
+<p><em>model answer</em>
+Many answers would be acceptable here. Metagenomics can help us understand the full resistome in that environment (i.e. not just organisms that were culturable by our collaborator) and this information could help to streamline or target further surveillance for the most critical pathogens and AMR. Genomic information from the cows with antibiotic-resistant infection will help to determine what is causing their infections, and assessment of those ARGs followed by laboratory confirmation of resistance and susceptibility phenotypes will guide the usage of antibiotics at the farm. With metagenomes and isolate genomes, including plasmid sequences, you could determine which ARGs are at risk of being horizontally transmitted. It is concerning that multiple organisms with multi-drug resistance are present in the agricultural runoff from this farm, as it could enter waterways, infect people who work at or visit the farm, or be transmitted via dairy products from the farm - interventions are likely needed to curb transmission along several different pathways.</p>
+<h1>Glossary</h1>
+<h2>Diamond Tabular Output format</h2>
+<p>The following fields are the column headers of Diamond Blast tabular output format 6:</p>
+<p><code>qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore</code></p>
+<p>Explanation:</p>
+<ul>
+<li><code>qseqid</code>: query or source sequence id</li>
+<li><code>sseqid</code>: subject or reference sequence id</li>
+<li><code>pident</code>: percentage of identical positions</li>
+<li><code>length</code>: alignment length (sequence overlap)</li>
+<li><code>mismatch</code>: number of mismatches</li>
+<li><code>gapopen</code>: number of gap openings</li>
+<li><code>qstart</code>: start of alignment in query</li>
+<li><code>qend</code>: end of alignment in query</li>
+<li><code>sstart</code>: start of alignment in subject</li>
+<li><code>send</code>: end of alignment in subject</li>
+<li><code>evalue</code>: <a href="https://www.metagenomics.wiki/tools/blast/evalue">expect value</a></li>
+<li><code>bitscore</code>: <a href="https://www.metagenomics.wiki/tools/blast/evalue">bit score</a></li>
+</ul>
+<h2>Carbapenem</h2>
+<p>Carbapenems, among the beta-lactams, are the most effective against Gram-positive and Gram-negative bacteria presenting a broad spectrum of antibacterial activity. Carbapenems are considered to be the most reliable last-resort treatment for bacterial infections, therefore, the emergence and rapid spread through all continents of carbapenem resistance, mainly among Gram-negative bacteria, constitutes a global public-healthcare problem of major importance. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4735501/">Meletis 2016</a></p>
+<h2>Tetracycline</h2>
+<p>Tetracycline antibiotics are well known for their broad spectrum of activity, spanning a wide range of Gram-positive and -negative bacteria, spirochetes, obligate intracellular bacteria, as well as protozoan parasites. Several of tetracyclines remain in clinical use for the treatment of uncomplicated respiratory, urogenital, gastrointestinal, and other rare and serious infections; however, the dissemination of tetracycline-resistant mechanisms has narrowed their utility, limiting use to only infections with confirmed susceptibility. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4817740/">Grossman 2016</a></p>
