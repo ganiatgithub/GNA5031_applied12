@@ -29,15 +29,6 @@ In this workshop you will analyse this data to identify the ARGs in these isolat
 
 ## Part 1: Identify the isolates and search their genomes for ARGs
 
-### Login to virtual machine
-- [list of VMs](https://docs.google.com/document/d/10xCfnzVv0f3GhByf5eI0TuRFphFmW9MwhVV2dWdaksE/edit#heading=h.hp02g0aoh97y)
-- [Instructions for VM login in detail (example from week 2)](https://docs.google.com/document/d/1WBYDpS5utSvHylmRrgBNzXmZwQ74kTkv/edit)
-
-```
-ssh -x gnii0001@gna5031s1-gnii0001-01.rep.monash.edu # currently na
-# next type in your passwords
-```
-
 ### Obtain data and software
 Once logged in, use the following commands to obtain software and data.
 
